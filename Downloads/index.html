@@ -3,23 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#052021">
+<meta name="description" content="Découvrez le Club Privé Tempeos by BR Solution, estimez vos économies et explorez les formules d'adhésion.">
+<meta name="color-scheme" content="light">
 <title>Club Privé Tempeos — BR Solution</title>
 <style>
 :root{--ink:#142038;--muted:#53627a;--turq:#12c7bd;--turq2:#10aaa4;--orange:#ff7900;--line:#dce3ea;--paper:#fff;--soft:#f5f7f8}
-*{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
-body{min-height:100vh;background:#00100f;display:flex;align-items:flex-start;justify-content:center;padding:28px 18px;position:relative;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;background:
-radial-gradient(circle at 12% 9%,rgba(255,255,255,.05),transparent 20%),
-linear-gradient(rgba(0,12,12,.78),rgba(0,12,12,.78)),
-repeating-linear-gradient(0deg,transparent 0 125px,rgba(255,255,255,.025) 126px 127px);
-z-index:-2}
-.brands{position:fixed;inset:0;z-index:-1;opacity:.38;color:white;font-weight:800;font-size:32px;overflow:hidden;pointer-events:none}
-.brand{position:absolute;white-space:nowrap}.b1{left:2%;top:5%}.b2{left:18%;top:18%}.b3{left:82%;top:7%}.b4{left:87%;top:23%}.b5{left:3%;top:37%}.b6{left:17%;top:50%}.b7{left:82%;top:39%}.b8{left:87%;top:54%}.b9{left:2%;top:73%}.b10{left:20%;top:84%}.b11{left:72%;top:76%}.b12{left:85%;top:88%}
-.shell{width:min(1120px,96vw);background:rgba(247,248,249,.97);border-radius:28px;overflow:hidden;box-shadow:0 22px 70px rgba(0,0,0,.38)}
+*{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+body{min-height:100vh;background:#031a1b;display:flex;align-items:flex-start;justify-content:center;padding:34px 18px;position:relative;overflow-x:hidden;isolation:isolate}
+body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 15% 25%,rgba(12,159,151,.26),transparent 40%),radial-gradient(ellipse at 82% 76%,rgba(255,121,0,.1),transparent 42%),linear-gradient(150deg,#051c20,#00100f 62%,#071d21)}
+.partner-wall{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;filter:saturate(.92)}
+.partner{--tilt:0deg;--delay:0s;position:absolute;display:flex;align-items:center;gap:12px;padding:11px 16px;min-width:170px;max-width:245px;border:1px solid rgba(255,255,255,.16);border-radius:18px;background:rgba(255,255,255,.085);box-shadow:0 16px 30px rgba(0,0,0,.18);backdrop-filter:blur(5px);color:rgba(255,255,255,.89);font-size:clamp(14px,1.3vw,18px);font-weight:850;letter-spacing:-.4px;animation:floatPartner 10s ease-in-out infinite alternate;animation-delay:var(--delay);transform:rotate(var(--tilt))}
+.partner img{width:42px;height:42px;object-fit:contain;border-radius:12px;background:#fff;padding:6px;flex:none}
+.partner-1{left:3%;top:10%;--tilt:-9deg;--delay:0s}.partner-2{right:2%;top:8%;--tilt:8deg;--delay:-2s}
+.partner-3{left:1%;top:37%;--tilt:6deg;--delay:-4s}.partner-4{right:1%;top:36%;--tilt:-7deg;--delay:-1s}
+.partner-5{left:4%;top:69%;--tilt:-6deg;--delay:-3s}.partner-6{right:2%;top:73%;--tilt:5deg;--delay:-5s}
+.partner-7{left:17%;top:87%;--tilt:-4deg;--delay:-2s}.partner-8{right:16%;top:89%;--tilt:5deg;--delay:-4s}
+@keyframes floatPartner{from{transform:translateY(-8px) rotate(var(--tilt))}to{transform:translateY(12px) rotate(calc(var(--tilt) + 2deg))}}
+.shell{width:min(1120px,96vw);position:relative;background:rgba(247,248,249,.975);border-radius:28px;overflow:hidden;box-shadow:0 25px 85px rgba(0,0,0,.48)}
 header{background:linear-gradient(110deg,#fff 45%,#efffff);padding:30px 34px 27px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.logoWrap{display:flex;align-items:center;gap:18px}.logo{width:70px;height:70px;border:3px solid var(--turq);border-radius:19px;position:relative;background:#fff}
-.logo:before{content:"";position:absolute;left:14px;top:12px;width:37px;height:37px;border:10px solid #ffc400;border-top-color:var(--turq);border-radius:8px;transform:rotate(30deg)}
-h1{font-size:39px;line-height:1;margin:0 0 9px}.by{font-weight:700;color:#657086;font-size:17px}
+ .logoWrap{display:flex;align-items:center;gap:18px;min-width:0}
+.logo{width:125px;min-width:125px;height:62px;border:1px solid #b6efea;border-radius:15px;display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden;padding:9px;box-shadow:0 4px 15px rgba(14,95,93,.06)}
+.logo span{display:block;font-size:21px;font-weight:900;font-style:italic;letter-spacing:-1px;color:#12a9a1;white-space:nowrap;line-height:1;transform:none}
+h1{font-size:clamp(26px,3.6vw,39px);line-height:1.05;margin:0 0 9px}.by{font-weight:700;color:#657086;font-size:17px}
 .pill{border:1px solid #ffbe75;background:#fff8ef;color:#9d3509;border-radius:30px;padding:12px 18px;font-weight:800;white-space:nowrap}
 .progress{height:7px;background:#e6edf0}.progress>div{height:100%;background:linear-gradient(90deg,var(--turq),var(--orange));transition:.25s}
 main{padding:34px 32px 38px}.panel{background:#fff;border:1px solid #dfe3e8;border-radius:25px;padding:30px;box-shadow:0 10px 28px rgba(26,39,60,.06)}
@@ -27,29 +33,94 @@ main{padding:34px 32px 38px}.panel{background:#fff;border:1px solid #dfe3e8;bord
 .tags{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tag{padding:12px 14px;border:1px solid #5ce5da;border-radius:16px;background:#effdfa;color:#11645f;font-weight:800}
 label{display:block;font-weight:800;margin:0 0 8px}input{width:100%;border:1px solid #cbd6e2;border-radius:14px;padding:14px 15px;font-size:16px;outline:none}input:focus{border-color:var(--turq);box-shadow:0 0 0 3px rgba(18,199,189,.12)}
 .field{margin-bottom:16px}.inputUnit{position:relative}.inputUnit input{padding-right:70px}.unit{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-weight:800;color:#63728a}
-button,.btn{border:0;border-radius:14px;padding:14px 18px;font-size:16px;font-weight:800;cursor:pointer}.primary{background:linear-gradient(135deg,var(--turq),var(--turq2));color:#fff;box-shadow:0 8px 20px rgba(18,199,189,.2)}.secondary{background:#fff;color:#35435a;border:1px solid #ccd7e3}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+button,.btn{border:0;border-radius:14px;padding:14px 18px;font-size:16px;font-weight:800;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease}.primary{background:linear-gradient(135deg,var(--turq),var(--turq2));color:#fff;box-shadow:0 8px 20px rgba(18,199,189,.2)}.secondary{background:#fff;color:#35435a;border:1px solid #ccd7e3}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 .twoInputs{display:grid;grid-template-columns:1fr 1fr;gap:20px}.result{font-size:70px;font-weight:900;color:#128579;letter-spacing:2px;margin:12px 0}.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mini{border:1px solid #dfe4ea;border-radius:16px;padding:15px}.mini small{display:block;color:#617089;font-weight:800;margin-bottom:8px}.mini strong{font-size:20px}
 .choice{display:grid;grid-template-columns:1fr 1fr;gap:18px}.choiceCard{border:2px solid #6de8dc;background:#effdfb;border-radius:20px;padding:23px;cursor:pointer}.choiceCard.no{border-color:#ffc27f;background:#fff8ef}.choiceCard h3{font-size:21px;margin:0 0 12px}.price{font-size:48px;color:var(--turq);font-weight:900;margin:5px 0}.priceCard{border:1px solid #d7dde5;border-radius:20px;padding:24px;cursor:pointer}.priceCard.selected{outline:3px solid rgba(18,199,189,.35);border-color:var(--turq)}
 footer{border-top:1px solid #dde3e8;padding:18px 32px;color:#63728a;font-size:13px;background:#f8fafb}
 .hidden{display:none!important}.error{margin-top:12px;color:#a21c1c;font-weight:700}.success{color:#08776f;font-weight:800}
-@media(max-width:760px){body{padding:10px}.shell{border-radius:18px}header{padding:20px;align-items:flex-start}.pill{display:none}h1{font-size:28px}.logo{width:56px;height:56px}.grid2,.twoInputs,.choice,.cards{grid-template-columns:1fr}.title{font-size:28px}main{padding:20px 14px}.panel{padding:22px}.result{font-size:52px}}
+@media(max-width:760px){body{padding:10px}.shell{border-radius:18px}header{padding:20px;align-items:flex-start}.pill{display:none}h1{font-size:28px}.logo{width:102px;min-width:102px;height:55px;padding:7px}.logo span{font-size:18px}.grid2,.twoInputs,.choice,.cards{grid-template-columns:1fr}.title{font-size:28px}main{padding:20px 14px}.panel{padding:22px}.result{font-size:52px}}
 
 .notice{background:#fff7df;border:1px solid #eed08b;border-radius:14px;padding:16px;line-height:1.5;margin:16px 0}
 .contract{background:#fff;border:1px solid #ccd8e1;border-radius:15px;padding:22px;max-height:350px;overflow:auto;line-height:1.6}
 .checkline{display:flex;gap:10px;align-items:flex-start;margin:15px 0}.checkline input{width:auto;margin-top:5px}
 #demoSignature{font:italic 25px Georgia,serif;color:#117d76}
+
+/* Ergonomie, contrastes et optimisation des interactions */
+:focus-visible{outline:3px solid #ff7900!important;outline-offset:3px}
+button:hover,.choiceCard:hover,.priceCard:hover{transform:translateY(-2px)}
+button:active,.choiceCard:active,.priceCard:active{transform:translateY(0)}
+button:disabled{opacity:.65;cursor:wait;transform:none}
+.primary:hover{box-shadow:0 11px 26px rgba(18,199,189,.3)}
+.choiceCard,.priceCard{transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.choiceCard:hover,.priceCard:hover{box-shadow:0 14px 26px rgba(20,32,56,.09)}
+.tag{font-size:14px;display:flex;align-items:center;gap:8px}
+.tag:before{content:'✓';font-size:12px;background:#b9f6ef;color:#11645f;width:19px;height:19px;border-radius:50%;display:inline-grid;place-items:center;flex:none}
+.panel{min-width:0}.shell{animation:enter .5s ease both}@keyframes enter{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:960px){.partner{opacity:.36;min-width:0;padding:9px}.partner span{display:none}.partner img{width:47px;height:47px}}
+@media(max-width:760px){body{padding:12px 8px}.shell{width:100%}.partner-wall{opacity:.38}.partner{opacity:.65}.partner-7,.partner-8{display:none}header{gap:12px}h1{letter-spacing:-.8px}.tags{grid-template-columns:1fr 1fr}.actions button{min-height:46px}}
+@media(max-width:420px){.tags{grid-template-columns:1fr}.panel{padding:20px 17px}.result{font-size:44px}.logoWrap{gap:12px}.by{font-size:14px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* VERSION PC : 40 marques flottantes. Priorité à la lisibilité et à la performance. */
+.partner-wall{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1;filter:none}
+.partner{left:var(--x);top:var(--y);min-width:0;width:max-content;max-width:190px;display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:14px;background:rgba(255,255,255,.105);border:1px solid rgba(255,255,255,.19);box-shadow:0 5px 20px rgba(0,0,0,.14);backdrop-filter:none;color:#f1fbfb;font-size:13px;font-weight:800;white-space:nowrap;opacity:.79;transform:rotate(var(--tilt));animation:floatPartner 12s ease-in-out infinite alternate;animation-delay:var(--delay)}
+.partner img{width:38px;height:38px;object-fit:contain;flex:none;padding:5px;background:#fff;border-radius:10px}
+.partner span{overflow:hidden;text-overflow:ellipsis}
+.shell{z-index:1}
+@media (max-width:1250px){.partner{font-size:11px;max-width:140px;padding:7px}.partner img{width:31px;height:31px}}
+@media (max-width:960px){.partner-wall{opacity:.42}.partner{opacity:.58}.partner span{display:none}.partner:nth-child(n+23){display:none}}
+@media (max-width:760px){.partner-wall{opacity:.35}.partner:nth-child(n+13){display:none}.logoWrap{gap:10px}.logo{width:99px;min-width:99px;height:48px}.logo span{font-size:17px}}
+@media (max-width:430px){.logo{width:82px;min-width:82px;height:45px;padding:4px}.logo span{font-size:14px}.logoWrap{gap:8px}h1{font-size:23px}}
+@media(prefers-reduced-motion:reduce){.partner{animation:none!important}}
 </style>
 </head>
 <body>
-<div class="brands" aria-hidden="true">
- <span class="brand b1">amazon</span><span class="brand b2">DECATHLON</span><span class="brand b3">SEPHORA</span><span class="brand b4">Etam PARIS</span>
- <span class="brand b5">LEROY MERLIN</span><span class="brand b6">iGraal</span><span class="brand b7">PANDORA</span><span class="brand b8">SNCF</span>
- <span class="brand b9">INTERSPORT</span><span class="brand b10">Cultura</span><span class="brand b11">MAISONS DU MONDE</span><span class="brand b12">Besson</span>
+<div class="partner-wall" aria-hidden="true">
+<div class="partner" style="--x:1%;--y:3.0%;--tilt:-8deg;--delay:0s" title="Decathlon"><img src="https://www.google.com/s2/favicons?domain=decathlon.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Decathlon</span></div>
+<div class="partner" style="--x:87%;--y:6.1%;--tilt:5deg;--delay:-1s" title="Fnac"><img src="https://www.google.com/s2/favicons?domain=fnac.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Fnac</span></div>
+<div class="partner" style="--x:4%;--y:10.9%;--tilt:1deg;--delay:-2s" title="Carrefour"><img src="https://www.google.com/s2/favicons?domain=carrefour.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Carrefour</span></div>
+<div class="partner" style="--x:90%;--y:14.0%;--tilt:-3deg;--delay:-3s" title="Castorama"><img src="https://www.google.com/s2/favicons?domain=castorama.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Castorama</span></div>
+<div class="partner" style="--x:7%;--y:18.8%;--tilt:-7deg;--delay:-4s" title="Disneyland Paris"><img src="https://www.google.com/s2/favicons?domain=disneylandparis.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Disneyland Paris</span></div>
+<div class="partner" style="--x:93%;--y:21.9%;--tilt:6deg;--delay:-5s" title="Club Med"><img src="https://www.google.com/s2/favicons?domain=clubmed.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Club Med</span></div>
+<div class="partner" style="--x:1%;--y:26.7%;--tilt:2deg;--delay:-6s" title="Auchan"><img src="https://www.google.com/s2/favicons?domain=auchan.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Auchan</span></div>
+<div class="partner" style="--x:87%;--y:29.8%;--tilt:-2deg;--delay:-7s" title="Center Parcs"><img src="https://www.google.com/s2/favicons?domain=centerparcs.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Center Parcs</span></div>
+<div class="partner" style="--x:4%;--y:34.6%;--tilt:-6deg;--delay:-8s" title="Cdiscount"><img src="https://www.google.com/s2/favicons?domain=cdiscount.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Cdiscount</span></div>
+<div class="partner" style="--x:90%;--y:37.7%;--tilt:7deg;--delay:-9s" title="Netflix"><img src="https://www.google.com/s2/favicons?domain=netflix.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Netflix</span></div>
+<div class="partner" style="--x:7%;--y:42.5%;--tilt:3deg;--delay:-10s" title="E.Leclerc"><img src="https://www.google.com/s2/favicons?domain=e.leclerc&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>E.Leclerc</span></div>
+<div class="partner" style="--x:93%;--y:45.6%;--tilt:-1deg;--delay:0s" title="Boulanger"><img src="https://www.google.com/s2/favicons?domain=boulanger.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Boulanger</span></div>
+<div class="partner" style="--x:1%;--y:50.4%;--tilt:-5deg;--delay:-1s" title="Spotify"><img src="https://www.google.com/s2/favicons?domain=spotify.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Spotify</span></div>
+<div class="partner" style="--x:87%;--y:53.5%;--tilt:8deg;--delay:-2s" title="Puy du Fou"><img src="https://www.google.com/s2/favicons?domain=puydufou.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Puy du Fou</span></div>
+<div class="partner" style="--x:4%;--y:58.3%;--tilt:4deg;--delay:-3s" title="Futuroscope"><img src="https://www.google.com/s2/favicons?domain=futuroscope.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Futuroscope</span></div>
+<div class="partner" style="--x:90%;--y:61.4%;--tilt:0deg;--delay:-4s" title="Parc Astérix"><img src="https://www.google.com/s2/favicons?domain=parcasterix.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Parc Astérix</span></div>
+<div class="partner" style="--x:7%;--y:66.2%;--tilt:-4deg;--delay:-5s" title="Pierre &amp; Vacances"><img src="https://www.google.com/s2/favicons?domain=pierreetvacances.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Pierre &amp; Vacances</span></div>
+<div class="partner" style="--x:93%;--y:69.3%;--tilt:-8deg;--delay:-6s" title="Belambra"><img src="https://www.google.com/s2/favicons?domain=belambra.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Belambra</span></div>
+<div class="partner" style="--x:1%;--y:74.1%;--tilt:5deg;--delay:-7s" title="CGR Cinémas"><img src="https://www.google.com/s2/favicons?domain=cgrcinemas.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>CGR Cinémas</span></div>
+<div class="partner" style="--x:87%;--y:77.2%;--tilt:1deg;--delay:-8s" title="Kinépolis"><img src="https://www.google.com/s2/favicons?domain=kinepolis.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Kinépolis</span></div>
+<div class="partner" style="--x:4%;--y:82.0%;--tilt:-3deg;--delay:-9s" title="TUI"><img src="https://www.google.com/s2/favicons?domain=tui.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>TUI</span></div>
+<div class="partner" style="--x:90%;--y:85.1%;--tilt:-7deg;--delay:-10s" title="B&amp;B Hotels"><img src="https://www.google.com/s2/favicons?domain=hotel-bb.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>B&amp;B Hotels</span></div>
+<div class="partner" style="--x:7%;--y:89.9%;--tilt:6deg;--delay:0s" title="Capfun"><img src="https://www.google.com/s2/favicons?domain=capfun.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Capfun</span></div>
+<div class="partner" style="--x:93%;--y:93.0%;--tilt:2deg;--delay:-1s" title="Showroomprivé"><img src="https://www.google.com/s2/favicons?domain=showroomprive.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Showroomprivé</span></div>
+<div class="partner" style="--x:11.0%;--y:2%;--tilt:-2deg;--delay:-2s" title="Decathlon"><img src="https://www.google.com/s2/favicons?domain=decathlon.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Decathlon</span></div>
+<div class="partner" style="--x:11.0%;--y:88%;--tilt:-6deg;--delay:-3s" title="Fnac"><img src="https://www.google.com/s2/favicons?domain=fnac.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Fnac</span></div>
+<div class="partner" style="--x:21.4%;--y:5%;--tilt:7deg;--delay:-4s" title="Carrefour"><img src="https://www.google.com/s2/favicons?domain=carrefour.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Carrefour</span></div>
+<div class="partner" style="--x:21.4%;--y:91%;--tilt:3deg;--delay:-5s" title="Castorama"><img src="https://www.google.com/s2/favicons?domain=castorama.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Castorama</span></div>
+<div class="partner" style="--x:31.8%;--y:2%;--tilt:-1deg;--delay:-6s" title="Disneyland Paris"><img src="https://www.google.com/s2/favicons?domain=disneylandparis.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Disneyland Paris</span></div>
+<div class="partner" style="--x:31.8%;--y:94%;--tilt:-5deg;--delay:-7s" title="Club Med"><img src="https://www.google.com/s2/favicons?domain=clubmed.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Club Med</span></div>
+<div class="partner" style="--x:42.2%;--y:5%;--tilt:8deg;--delay:-8s" title="Auchan"><img src="https://www.google.com/s2/favicons?domain=auchan.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Auchan</span></div>
+<div class="partner" style="--x:42.2%;--y:88%;--tilt:4deg;--delay:-9s" title="Center Parcs"><img src="https://www.google.com/s2/favicons?domain=centerparcs.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Center Parcs</span></div>
+<div class="partner" style="--x:52.6%;--y:2%;--tilt:0deg;--delay:-10s" title="Cdiscount"><img src="https://www.google.com/s2/favicons?domain=cdiscount.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Cdiscount</span></div>
+<div class="partner" style="--x:52.6%;--y:91%;--tilt:-4deg;--delay:0s" title="Netflix"><img src="https://www.google.com/s2/favicons?domain=netflix.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Netflix</span></div>
+<div class="partner" style="--x:63.0%;--y:5%;--tilt:-8deg;--delay:-1s" title="E.Leclerc"><img src="https://www.google.com/s2/favicons?domain=e.leclerc&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>E.Leclerc</span></div>
+<div class="partner" style="--x:63.0%;--y:94%;--tilt:5deg;--delay:-2s" title="Boulanger"><img src="https://www.google.com/s2/favicons?domain=boulanger.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Boulanger</span></div>
+<div class="partner" style="--x:73.4%;--y:2%;--tilt:1deg;--delay:-3s" title="Spotify"><img src="https://www.google.com/s2/favicons?domain=spotify.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Spotify</span></div>
+<div class="partner" style="--x:73.4%;--y:88%;--tilt:-3deg;--delay:-4s" title="Puy du Fou"><img src="https://www.google.com/s2/favicons?domain=puydufou.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Puy du Fou</span></div>
+<div class="partner" style="--x:83.8%;--y:5%;--tilt:-7deg;--delay:-5s" title="Futuroscope"><img src="https://www.google.com/s2/favicons?domain=futuroscope.com&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Futuroscope</span></div>
+<div class="partner" style="--x:83.8%;--y:91%;--tilt:6deg;--delay:-6s" title="Parc Astérix"><img src="https://www.google.com/s2/favicons?domain=parcasterix.fr&amp;sz=128" width="38" height="38" loading="lazy" decoding="async" alt="" referrerpolicy="no-referrer"><span>Parc Astérix</span></div>
 </div>
 
 <div class="shell">
 <header>
- <div class="logoWrap"><div class="logo"></div><div><h1>Club Privé Tempeos</h1><div class="by">by BR Solution</div></div></div>
+ <div class="logoWrap"><div class="logo" aria-hidden="true"><span>tempeos</span></div><div><h1>Club Privé Tempeos</h1><div class="by">by BR Solution</div></div></div>
  <div class="pill">Carte avantages pour particuliers</div>
 </header>
 <div class="progress"><div id="bar" style="width:16%"></div></div>
@@ -78,11 +149,11 @@ footer{border-top:1px solid #dde3e8;padding:18px 32px;color:#63728a;font-size:13
 <section id="s3" class="step hidden">
  <div class="panel"><h2 class="title">Simulateur d’économies sur 1 an</h2><p class="subtitle">Renseignez vos dépenses habituelles. Le calcul applique une estimation moyenne de 5 % sur les dépenses indiquées, et une économie indicative de 6 € par séance de cinéma.</p>
  <div class="twoInputs">
-  <div><div class="field"><label>Budget courses mensuel</label><div class="inputUnit"><input id="courses" type="number" min="0" placeholder="Ex. 500"><span class="unit">€/mois</span></div></div>
-  <div class="field"><label>Nombre de séances cinéma par an</label><div class="inputUnit"><input id="cinema" type="number" min="0" placeholder="Ex. 12"><span class="unit">/an</span></div></div>
-  <div class="field"><label>Budget vêtements / parfums annuel</label><div class="inputUnit"><input id="vetements" type="number" min="0" placeholder="Ex. 900"><span class="unit">€/an</span></div></div></div>
-  <div><div class="field"><label>Budget Airbnb / Center Parcs : week-end annuel</label><div class="inputUnit"><input id="airbnb" type="number" min="0" placeholder="Ex. 800"><span class="unit">€/an</span></div></div>
-  <div class="field"><label>Budget équipement de la maison (Fnac, Darty...) annuel</label><div class="inputUnit"><input id="maison" type="number" min="0" placeholder="Ex. 1000"><span class="unit">€/an</span></div></div>
+  <div><div class="field"><label>Budget courses mensuel</label><div class="inputUnit"><input id="courses" type="number" min="0" inputmode="decimal" placeholder="Ex. 500"><span class="unit">€/mois</span></div></div>
+  <div class="field"><label>Nombre de séances cinéma par an</label><div class="inputUnit"><input id="cinema" type="number" min="0" inputmode="numeric" placeholder="Ex. 12"><span class="unit">/an</span></div></div>
+  <div class="field"><label>Budget vêtements / parfums annuel</label><div class="inputUnit"><input id="vetements" type="number" min="0" inputmode="decimal" placeholder="Ex. 900"><span class="unit">€/an</span></div></div></div>
+  <div><div class="field"><label>Budget Airbnb / Center Parcs : week-end annuel</label><div class="inputUnit"><input id="airbnb" type="number" min="0" inputmode="decimal" placeholder="Ex. 800"><span class="unit">€/an</span></div></div>
+  <div class="field"><label>Budget équipement de la maison (Fnac, Darty...) annuel</label><div class="inputUnit"><input id="maison" type="number" min="0" inputmode="decimal" placeholder="Ex. 1000"><span class="unit">€/an</span></div></div>
   <div class="actions"><button class="secondary" onclick="go(2)">Retour</button><button class="primary" onclick="calculate()">Voir mes économies</button></div></div>
  </div></div>
 </section>
@@ -96,18 +167,18 @@ footer{border-top:1px solid #dde3e8;padding:18px 32px;color:#63728a;font-size:13
 </section>
 
 <section id="s5" class="step hidden"><div class="panel"><h2 class="title">Souhaitez-vous bénéficier de ces avantages ?</h2>
- <div class="choice"><div class="choiceCard" onclick="chooseYes()"><h3>Oui, je veux souscrire</h3><p class="subtitle">Je veux souscrire à la carte Club Privé Tempeos by BR Solution et bénéficier de ces avantages.</p></div>
- <div class="choiceCard no" onclick="chooseNo()"><h3>Pas pour le moment</h3><p class="subtitle">Je préfère ne pas souscrire maintenant, mais je transmets ma réponse.</p></div></div>
+ <div class="choice"><div class="choiceCard" role="button" tabindex="0" onclick="chooseYes()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();chooseYes()}"><h3>Oui, je veux souscrire</h3><p class="subtitle">Je veux souscrire à la carte Club Privé Tempeos by BR Solution et bénéficier de ces avantages.</p></div>
+ <div class="choiceCard no" role="button" tabindex="0" onclick="chooseNo()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();chooseNo()}"><h3>Pas pour le moment</h3><p class="subtitle">Je préfère ne pas souscrire maintenant.</p></div></div>
  <div class="actions"><button class="secondary" onclick="go(4)">Retour</button></div></div>
 </section>
 
 <section id="s6" class="step hidden"><div class="panel"><h2 class="title">Choisissez votre tarif</h2><p class="subtitle">Sélectionnez la durée souhaitée pour la carte Club Privé Tempeos by BR Solution.</p>
- <div class="choice"><div class="priceCard" id="p79" onclick="selectPlan('79 € - 1 an','p79')"><div class="price">79 €</div><h3>1 an</h3><p class="subtitle">Accès aux avantages pendant 12 mois.</p></div>
- <div class="priceCard" id="p129" onclick="selectPlan('129 € - 2 ans','p129')"><div class="price">129 €</div><h3>2 ans</h3><p class="subtitle">Accès aux avantages pendant 24 mois.</p></div></div>
+ <div class="choice"><div class="priceCard" id="p79" role="button" tabindex="0" onclick="selectPlan('79 € - 1 an','p79')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPlan('79 € - 1 an','p79')}"><div class="price">79 €</div><h3>1 an</h3><p class="subtitle">Accès aux avantages pendant 12 mois.</p></div>
+ <div class="priceCard" id="p129" role="button" tabindex="0" onclick="selectPlan('129 € - 2 ans','p129')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPlan('129 € - 2 ans','p129')}"><div class="price">129 €</div><h3>2 ans</h3><p class="subtitle">Accès aux avantages pendant 24 mois.</p></div></div>
  <div class="actions"><button class="secondary" onclick="go(5)">Retour</button></div></div>
 </section>
 
-<section id="s7" class="step hidden"><div class="panel"><h2 class="title">Vos coordonnées</h2><p class="subtitle" id="contactText">Merci de compléter vos informations afin de transmettre votre demande.</p>
+<section id="s7" class="step hidden"><div class="panel"><h2 class="title">Vos coordonnées</h2><p class="subtitle" id="contactText">Complétez vos informations pour préparer la signature. Aucun envoi au BR Dashboard pendant ce test.</p>
  <form id="leadForm">
   <div class="twoInputs"><div><div class="field"><label>Nom</label><input name="nom" required placeholder="Votre nom"></div><div class="field"><label>Prénom</label><input name="prenom" required placeholder="Votre prénom"></div></div>
   <div><div class="field"><label>Numéro de téléphone</label><input name="telephone" required placeholder="06 00 00 00 00"></div><div class="field"><label>Adresse email</label><input name="email" type="email" required placeholder="exemple@email.com"></div></div></div>
@@ -135,10 +206,10 @@ footer{border-top:1px solid #dde3e8;padding:18px 32px;color:#63728a;font-size:13
 <p>Formule : <strong id="payPlan"></strong></p><p>Montant fictif : <strong id="payAmount"></strong></p><p>Signataire : <strong id="paySigner"></strong></p>
 <p class="subtitle">La signature SignWell de test a été vérifiée. Cette page simule seulement le paiement. Une vraie session Stripe en mode test nécessite une fonction serveur et des clés de test sécurisées.</p>
 <div class="actions"><button class="secondary" onclick="go(8)">Retour</button><button class="primary" onclick="go(10)">Simuler le paiement</button></div></div></section>
-<section id="s10" class="step hidden"><div class="panel"><h2 class="title">Test terminé !</h2><p class="success">Parcours de démonstration terminé.</p><p class="subtitle">Aucune signature SignWell ni transaction Stripe n'a été créée.</p><button class="secondary" onclick="go(1)">Recommencer</button></div></section>
-<section id="s11" class="step hidden"><div class="panel"><h2 class="title">Merci !</h2><p class="subtitle">Votre réponse a été transmise à BR Solution. Aucune souscription ni paiement effectué.</p></div></section>
+<section id="s10" class="step hidden"><div class="panel"><h2 class="title">Test terminé !</h2><p class="success">Parcours de démonstration terminé.</p><p class="subtitle">Aucune transaction Stripe n’a été effectuée. La signature SignWell de test éventuelle reste consultable dans votre compte SignWell.</p><button class="secondary" onclick="go(1)">Recommencer</button></div></section>
+<section id="s11" class="step hidden"><div class="panel"><h2 class="title">Merci !</h2><p class="subtitle">Votre parcours est terminé. Aucune information n’a été envoyée, aucune souscription ni paiement effectué.</p></div></section>
 </main>
-<footer>Simulation indicative basée sur les montants renseignés. Les économies réelles peuvent varier selon les offres disponibles.</footer>
+<footer>Simulation indicative : les économies réelles varient selon les offres et les conditions des enseignes. Logos illustratifs de partenaires mentionnés par Tempeos ; disponibilité à vérifier.</footer>
 </div>
 
 <script>
@@ -152,8 +223,8 @@ function calculate(){
  rCourses.textContent=euro(rc);rCinema.textContent=euro(rci);rVetements.textContent=euro(rv);rAirbnb.textContent=euro(ra);rMaison.textContent=euro(rm);total.textContent=savings.toLocaleString('fr-FR');go(4)
 }
 function chooseYes(){decision='oui';go(6)}
-function chooseNo(){decision='non';plan='';document.getElementById('contactText').textContent='Merci de compléter vos informations afin de transmettre votre réponse.';go(7)}
-function selectPlan(v,id){plan=v;document.querySelectorAll('.priceCard').forEach(x=>x.classList.remove('selected'));document.getElementById(id).classList.add('selected');document.getElementById('contactText').textContent='Merci de compléter vos informations pour finaliser votre demande de carte.';setTimeout(()=>go(7),180)}
+function chooseNo(){decision='non';plan='';document.getElementById('contactText').textContent='Merci de compléter vos informations pour terminer la simulation (aucun envoi externe).';go(7)}
+function selectPlan(v,id){plan=v;document.querySelectorAll('.priceCard').forEach(x=>x.classList.remove('selected'));document.getElementById(id).classList.add('selected');document.getElementById('contactText').textContent='Merci de compléter vos informations pour préparer le contrat SignWell de test.';setTimeout(()=>go(7),180)}
 document.getElementById('leadForm').addEventListener('submit',(e)=>{
  e.preventDefault();
  const form=e.currentTarget;
