@@ -12,7 +12,7 @@ export default async function handler(req,res){
  if(req.method!=='POST')return res.status(405).json({error:'Méthode non autorisée'});
  const key=process.env.SIGNWELL_API_KEY;
  if(!key)return res.status(503).json({error:'Signature non configurée'});
- if(process.env.ENABLE_LIVE_CHECKOUT!=='true'||!process.env.STRIPE_SECRET_KEY||!process.env.STRIPE_PRICE_ID||!process.env.SIGNING_PROOF_SECRET)return res.status(503).json({error:'Souscription momentanément indisponible : configuration de production incomplète.'});
+ if(!process.env.SIGNING_PROOF_SECRET)return res.status(503).json({error:'SIGNING_PROOF_SECRET manquant dans Vercel.'});
  const b=req.body||{};
  const d={prenom:clean(b.prenom,70),nom:clean(b.nom,70),voie:clean(b.voie,140),code_postal:clean(b.code_postal,5),ville:clean(b.ville,90),telephone:clean(b.telephone,30),email:clean(b.email,150)};
  if(!Object.entries(d).every(([k,v])=>valid(v,k==='email'?5:1))||!/^[0-9]{5}$/.test(d.code_postal)||!/^\S+@\S+\.\S+$/.test(d.email)||b.plan!=='69 € - abonnement annuel')return res.status(400).json({error:'Coordonnées invalides'});
