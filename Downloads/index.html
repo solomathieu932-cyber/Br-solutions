@@ -184,16 +184,19 @@ button:disabled{cursor:not-allowed}
  <div class="actions"><button class="secondary" onclick="go(4)">Retour</button></div></div>
 </section>
 
-<section id="s6" class="step hidden"><div class="panel"><h2 class="title">Choisissez votre tarif</h2><p class="subtitle">Sélectionnez la durée souhaitée pour la carte Club Privé Tempeos by BR Solution.</p>
- <div class="choice"><div class="priceCard" id="p79" role="button" tabindex="0" onclick="selectPlan('79 € - 1 an','p79')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPlan('79 € - 1 an','p79')}"><div class="price">79 €</div><h3>1 an</h3><p class="subtitle">Accès aux avantages pendant 12 mois.</p></div>
- <div class="priceCard" id="p129" role="button" tabindex="0" onclick="selectPlan('129 € - 2 ans','p129')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPlan('129 € - 2 ans','p129')}"><div class="price">129 €</div><h3>2 ans</h3><p class="subtitle">Accès aux avantages pendant 24 mois.</p></div></div>
- <div class="actions"><button class="secondary" onclick="go(5)">Retour</button></div></div>
-</section>
+<section id="s6" class="step hidden"><div class="panel"><h2 class="title">Votre abonnement annuel</h2>
+<p class="subtitle">Une seule formule, pour 12 mois. À renouvellement automatique, sous réserve de validation des conditions contractuelles définitives.</p>
+<div class="priceCard selected"><div class="price">69 €</div><h3>1 an — abonnement annuel</h3><p class="subtitle">69 € TTC à la souscription, puis à chaque renouvellement annuel. Modalités de résiliation précisées dans le contrat définitif.</p></div>
+<div class="actions"><button class="secondary" onclick="go(5)">Retour</button><button class="primary" onclick="selectPlan('69 € - abonnement annuel','p69')">Continuer</button></div>
+</div></section>
 
 <section id="s7" class="step hidden"><div class="panel"><h2 class="title">Vos coordonnées</h2><p class="subtitle" id="contactText">Complétez vos informations pour préparer la signature. Aucun envoi au BR Dashboard pendant ce test.</p>
  <form id="leadForm">
   <div class="twoInputs"><div><div class="field"><label>Nom</label><input name="nom" required placeholder="Votre nom"></div><div class="field"><label>Prénom</label><input name="prenom" required placeholder="Votre prénom"></div></div>
   <div><div class="field"><label>Numéro de téléphone</label><input name="telephone" required placeholder="06 00 00 00 00"></div><div class="field"><label>Adresse email</label><input name="email" type="email" required placeholder="exemple@email.com"></div></div></div>
+  <div class="twoInputs"><div class="field"><label for="voie">Adresse (numéro et rue)</label><input id="voie" name="voie" autocomplete="street-address" required maxlength="140" placeholder="12 rue de la Gare"></div><div class="field"><label for="code_postal">Code postal</label><input id="code_postal" name="code_postal" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" required maxlength="5" placeholder="54230"></div></div>
+  <div class="field"><label for="ville">Ville</label><input id="ville" name="ville" autocomplete="address-level2" required maxlength="90" placeholder="Votre ville"></div>
+  <p class="subtitle">Ces coordonnées servent à compléter automatiquement l'en-tête du contrat PDF. Aucun envoi à BR Dashboard.</p>
   <input type="hidden" name="souhaite_souscrire" id="fDecision"><input type="hidden" name="tarif" id="fPlan"><input type="hidden" name="economie_estimee" id="fSaving">
   <div class="actions"><button type="button" class="secondary" onclick="go(decision==='oui'?6:5)">Retour</button><button type="submit" class="primary">Continuer</button></div>
   <div id="formMsg"></div>
@@ -205,11 +208,12 @@ button:disabled{cursor:not-allowed}
 <h2 class="title">Contrat de test — BR Solution</h2>
 <div class="notice"><strong>SignWell — mode test.</strong> Le document sera signé via la véritable interface SignWell intégrée. La signature de test n’est pas juridiquement contraignante.</div>
 <div class="contract">
-<h3>Club Privé Tempeos — contrat fictif</h3>
+<h3>Prévisualisation des coordonnées du contrat</h3>
 <p>Adhérent : <strong id="contractName"></strong><br>E-mail : <strong id="contractEmail"></strong><br>Offre : <strong id="contractPlan"></strong></p>
-<p>Ce document sert uniquement à tester le parcours de souscription. Aucun contrat réel n'est conclu, aucun service n'est commandé et aucun paiement n'est exigible.</p>
-<p>Avant le lancement réel, les conditions de vente, la durée, le renouvellement et les informations légales devront être validés.</p>
-<p>Signature de démonstration : <span id="demoSignature">Non renseignée</span></p>
+<p>Adresse : <strong id="contractAddress"></strong></p>
+<p><strong>PDF fourni :</strong> Contrat de groupement de bénéficiaires, 2 pages, 69 € TTC/an.</p>
+<p class="error">Attention : ses conditions générales prévoient une durée minimale de 2 ans et une résiliation par LRAR avec préavis de 3 mois, incompatibles avec l'offre annuelle destinée aux particuliers. À faire rectifier avant toute utilisation réelle.</p>
+<p>La signature reste en mode test et n'entraîne aucun paiement.</p>
 </div>
 <div class="actions"><button class="secondary" onclick="go(7)">Retour</button><button class="primary" id="startSign" onclick="startSignWell()">Ouvrir la signature SignWell</button></div><p id="signError" class="error" role="alert"></p><p id="signStatus" class="subtitle" aria-live="polite"></p><div id="signwellContainer" aria-label="Signature électronique SignWell"></div></div></section>
 <section id="s9" class="step hidden"><div class="panel">
@@ -236,7 +240,7 @@ function calculate(){
 }
 function chooseYes(){decision='oui';go(6)}
 function chooseNo(){decision='non';plan='';document.getElementById('contactText').textContent='Merci de compléter vos informations pour terminer la simulation (aucun envoi externe).';go(7)}
-function selectPlan(v,id){plan=v;document.querySelectorAll('.priceCard').forEach(x=>x.classList.remove('selected'));document.getElementById(id).classList.add('selected');document.getElementById('contactText').textContent='Merci de compléter vos informations pour préparer le contrat SignWell de test.';setTimeout(()=>go(7),180)}
+function selectPlan(v,id){plan=v;document.querySelectorAll('.priceCard').forEach(x=>x.classList.add('selected'));document.getElementById('contactText').textContent='Complétez vos coordonnées pour préremplir le contrat.';setTimeout(()=>go(7),180)}
 document.getElementById('leadForm').addEventListener('submit',(e)=>{
  e.preventDefault();
  const form=e.currentTarget;
@@ -244,7 +248,14 @@ document.getElementById('leadForm').addEventListener('submit',(e)=>{
  const msg=document.getElementById('formMsg');
  msg.className='';msg.textContent='';
  fDecision.value=decision;fPlan.value=plan;fSaving.value=savings+' €';
- if(decision==='oui')go(8);
+ if(decision==='oui'){
+  const d=Object.fromEntries(new FormData(form).entries());
+  document.getElementById('contractName').textContent=d.prenom+' '+d.nom;
+  document.getElementById('contractEmail').textContent=d.email;
+  document.getElementById('contractPlan').textContent=plan;
+  document.getElementById('contractAddress').textContent=d.voie+', '+d.code_postal+' '+d.ville;
+  go(8);
+ }
  else go(11);
 });
 
@@ -254,7 +265,7 @@ async function startSignWell(){
  err.textContent='';btn.disabled=true;document.getElementById('signStatus').textContent='Préparation du contrat SignWell…';
  try{
   const data=Object.fromEntries(new FormData(document.getElementById('leadForm')).entries());
-  const response=await fetch('/api/signwell-create',{method:'POST',headers:{'Content-Type':'application/json','Cache-Control':'no-cache'},cache:'no-store',body:JSON.stringify({name:(data.prenom+' '+data.nom).trim(),email:data.email,plan})});
+  const response=await fetch('/api/signwell-create',{method:'POST',headers:{'Content-Type':'application/json','Cache-Control':'no-cache'},cache:'no-store',body:JSON.stringify({prenom:data.prenom,nom:data.nom,telephone:data.telephone,email:data.email,voie:data.voie,code_postal:data.code_postal,ville:data.ville,plan})});
   const payload=await response.json();
   if(!response.ok||!payload.url)throw Error((payload.error||'Impossible de créer le document SignWell')+(payload.documentId?' (ID document : '+payload.documentId+')':''));
   signwellDocumentId=payload.documentId;
@@ -266,7 +277,7 @@ async function startSignWell(){
    try{const r=await fetch('/api/signwell-status?id='+encodeURIComponent(signwellDocumentId));const j=await r.json();
    if(!r.ok||!j.completed)throw Error('Signature pas encore confirmée : réessayez dans quelques instants.');
    document.getElementById('payPlan').textContent=plan;
-   document.getElementById('payAmount').textContent=plan.startsWith('129')?'129 € (fictifs)':'79 € (fictifs)';
+   document.getElementById('payAmount').textContent='69 € (test sans débit)';
    document.getElementById('paySigner').textContent=(data.prenom+' '+data.nom).trim();go(9);
    }catch(e){err.textContent=e.message;btn.disabled=false;}
   },closed:()=>{btn.disabled=false;},error:()=>{err.textContent='SignWell a signalé une erreur. Réessayez avec un nouveau document puis consultez son statut dans votre compte SignWell.';btn.disabled=false;}}}).open();

@@ -1,23 +1,46 @@
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+
+const API = 'https://www.signwell.com/api/v1/documents/';
+const clean = (v, max=120) => typeof v==='string' ? v.trim().slice(0,max) : '';
+const valid = (v,min=1)=>v.length>=min;
+
 export default async function handler(req,res){
- res.setHeader('Cache-Control','no-store, max-age=0');
+ res.setHeader('Cache-Control','no-store');
  if(req.method!=='POST')return res.status(405).json({error:'Méthode non autorisée'});
- if(!process.env.SIGNWELL_API_KEY)return res.status(500).json({error:'SIGNWELL_API_KEY manquante dans Vercel'});
- const {name,email,plan}=req.body||{};
- if(typeof name!=='string'||name.trim().length<3||name.length>120||typeof email!=='string'||!/^\S+@\S+\.\S+$/.test(email)||!['79 € - 1 an','129 € - 2 ans'].includes(plan))return res.status(400).json({error:'Informations invalides'});
- const html=`<!doctype html><html lang="fr"><meta charset="utf-8"><style>body{font-family:Arial;padding:40px;line-height:1.6}h1{color:#0a8179}</style><h1>BR Solution — Contrat de test</h1><h2>Club Privé Tempeos</h2><p><strong>MODE TEST — SANS ENGAGEMENT NI PAIEMENT.</strong></p><p>Offre de démonstration : ${plan.startsWith('129')?'129 € pour 2 ans':'79 € pour 1 an'} (montant fictif).</p><p>Ce document sert exclusivement à tester la signature intégrée SignWell. Il ne constitue pas une adhésion ni une commande. Aucune obligation de paiement ou de renouvellement.</p><p>Le signataire confirme avoir participé à un essai technique.</p></html>`;
- const base64=Buffer.from(html,'utf8').toString('base64');
+ const key=process.env.SIGNWELL_API_KEY;
+ if(!key)return res.status(500).json({error:'Clé SignWell non configurée dans Vercel'});
+ const b=req.body||{};
+ const d={prenom:clean(b.prenom,70),nom:clean(b.nom,70),voie:clean(b.voie,140),code_postal:clean(b.code_postal,5),ville:clean(b.ville,90),telephone:clean(b.telephone,30),email:clean(b.email,150)};
+ if(!Object.entries(d).every(([k,v])=>valid(v,k==='email'?5:1))||!/^[0-9]{5}$/.test(d.code_postal)||!/^\S+@\S+\.\S+$/.test(d.email)||b.plan!=='69 € - abonnement annuel')return res.status(400).json({error:'Coordonnées invalides'});
  try{
-  const r=await fetch('https://www.signwell.com/api/v1/documents/',{method:'POST',headers:{'Content-Type':'application/json','X-Api-Key':process.env.SIGNWELL_API_KEY},body:JSON.stringify({test_mode:true,embedded_signing:true,with_signature_page:true,draft:false,expires_in:30,reminders:false,name:'BR Solution — contrat de test',files:[{name:'contrat-test.html',file_base64:base64}],recipients:[{id:'1',name:name.trim(),email:email.trim()}],language:'fr'})});
-  const data=await r.json();
-  if(!r.ok)return res.status(502).json({error:'SignWell a refusé le document ('+r.status+'). Vérifiez les paramètres API.'});
-  const url=data.recipients?.[0]?.embedded_signing_url;
-  if(!url||!url.startsWith('https://www.signwell.com/docs/'))return res.status(502).json({error:'SignWell ne renvoie pas de lien de signature intégrée valide.',documentId:data.id||null});
-  // Validate the newly-created document's actual state before embedding the signer link.
-  const check=await fetch('https://www.signwell.com/api/v1/documents/'+encodeURIComponent(data.id),{headers:{'X-Api-Key':process.env.SIGNWELL_API_KEY,'Cache-Control':'no-cache'},cache:'no-store'});
-  if(!check.ok)return res.status(502).json({error:'Document créé mais impossible de vérifier son état dans SignWell.',documentId:data.id});
-  const document=await check.json();
-  const status=String(document.status||'unknown').toLowerCase();
-  if(['expired','canceled','cancelled','declined','error','draft'].includes(status))return res.status(502).json({error:'SignWell a créé un document dans un état non signable : '+status+'. Vérifiez les paramètres du compte SignWell.',documentId:data.id});
-  return res.status(200).json({url,documentId:data.id,status});
- }catch(e){return res.status(502).json({error:'Connexion SignWell impossible'});}
+  const pdfBytes=await readFile(join(process.cwd(),'assets','contrat-individuel-vierge.pdf'));
+  const pdf=await PDFDocument.load(pdfBytes);
+  const page=pdf.getPages()[0], font=await pdf.embedFont(StandardFonts.Helvetica);
+  // A4, coordinates measured against the submitted PDF's first page.
+  const entries=[
+   [110,677,d.prenom],[110,660,d.nom],[110,643,d.voie],[110,626,d.code_postal],
+   [110,610,d.ville],[110,593,d.telephone],[110,576,d.email]
+  ];
+  const put=(x,y,value)=>{
+    // WinAnsi fonts cannot display all Unicode characters; use a safe fallback.
+    const t=value.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\x20-\x7E\xA0-\xFF]/g,' ');
+    const size= Math.min(10, Math.max(7, 10*205/Math.max(205,font.widthOfTextAtSize(t,10))));
+    page.drawText(t,{x,y,size,font,color:rgb(.08,.16,.23)});
+  };
+  for(const [x,y,value] of entries)put(x,y,value);
+  // Signing date and handwritten signature are collected by SignWell, not prefilled.
+  const base64=Buffer.from(await pdf.save()).toString('base64');
+  const payload={test_mode:true,embedded_signing:true,with_signature_page:true,draft:false,expires_in:30,reminders:false,
+   name:'BR SOLUTIONS — Contrat individuel — TEST',
+   files:[{name:'contrat-individuel-pre-rempli.pdf',file_base64:base64}],
+   recipients:[{id:'1',name:`${d.prenom} ${d.nom}`,email:d.email}],language:'fr'};
+  const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','X-Api-Key':key},body:JSON.stringify(payload)});
+  const result=await r.json().catch(()=>({}));
+  if(!r.ok)return res.status(502).json({error:`SignWell a refusé le document (HTTP ${r.status}). Vérifiez la configuration et le compte.`});
+  const url=result.recipients?.[0]?.embedded_signing_url;
+  if(!url||!url.startsWith('https://www.signwell.com/'))return res.status(502).json({error:'Lien de signature intégrée non fourni par SignWell',documentId:result.id||null});
+  return res.status(200).json({url,documentId:result.id,status:result.status});
+ }catch(e){console.error('SignWell document error',e?.message);return res.status(502).json({error:'Impossible de préparer le contrat PDF ou joindre SignWell.'});}
 }
