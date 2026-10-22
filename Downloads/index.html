@@ -181,7 +181,8 @@ button:disabled{cursor:not-allowed}
 <section id="s5" class="step hidden"><div class="panel"><h2 class="title">Souhaitez-vous bénéficier de ces avantages ?</h2>
  <div class="choice"><div class="choiceCard" role="button" tabindex="0" onclick="chooseYes()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();chooseYes()}"><h3>Oui, je veux souscrire</h3><p class="subtitle">Je veux souscrire à la carte Club Privé Tempeos by BR Solution et bénéficier de ces avantages.</p></div>
  <div class="choiceCard no" role="button" tabindex="0" onclick="chooseNo()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();chooseNo()}"><h3>Pas pour le moment</h3><p class="subtitle">Je préfère ne pas souscrire maintenant.</p></div></div>
- <div class="actions"><button class="secondary" onclick="go(4)">Retour</button></div></div>
+ <div class="actions"><button class="secondary" onclick="go(4)">Retour</button></div>
+ <div class="choiceCard" role="button" tabindex="0" onclick="chooseDemo()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();chooseDemo()}"><h3>Je souhaite Ãªtre recontactÃ© pour une dÃ©monstration</h3><p class="subtitle">DÃ©couvrez les avantages avec notre Ã©quipe, sans engagement et sans paiement.</p></div></div>
 </section>
 
 <section id="s6" class="step hidden"><div class="panel"><h2 class="title">Votre abonnement annuel</h2>
@@ -223,6 +224,37 @@ button:disabled{cursor:not-allowed}
 <div class="actions"><button class="secondary" onclick="go(8)">Retour</button><button class="primary" id="checkoutBtn" onclick="startStripeCheckout()">Continuer vers Stripe — 69 € / an</button></div><p id="checkoutError" class="error" role="alert"></p><p id="payError" class="error" role="alert"></p></div></section>
 <section id="s10" class="step hidden"><div class="panel"><h2 class="title">Retour de Stripe</h2><p class="subtitle">Votre demande a été reçue. Le paiement est vérifié côté serveur ; ce retour ne confirme pas à lui seul l’activation de l’abonnement.</p><button class="secondary" onclick="go(1)">Recommencer</button></div></section>
 <section id="s11" class="step hidden"><div class="panel"><h2 class="title">Merci !</h2><p class="subtitle">Votre parcours est terminé. Aucune information n’a été envoyée, aucune souscription ni paiement effectué.</p></div></section>
+
+<section id="s12" class="step hidden"><div class="panel">
+  <h2 class="title">Demandez une dÃ©monstration</h2>
+  <p class="subtitle">Un membre de BR Solutions pourra vous recontacter pour prÃ©senter les avantages du Club PrivÃ© Tempeos. Cette demande est gratuite et sans engagement.</p>
+  <form id="demoRequestForm">
+    <div class="twoInputs">
+      <div class="field"><label for="demoNom">Nom</label><input id="demoNom" name="nom" autocomplete="family-name" maxlength="80" required placeholder="Votre nom"></div>
+      <div class="field"><label for="demoPrenom">PrÃ©nom</label><input id="demoPrenom" name="prenom" autocomplete="given-name" maxlength="80" required placeholder="Votre prÃ©nom"></div>
+    </div>
+    <div class="twoInputs">
+      <div class="field"><label for="demoPostal">Code postal</label><input id="demoPostal" name="code_postal" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" required placeholder="54000"></div>
+      <div class="field"><label for="demoVille">Ville</label><input id="demoVille" name="ville" autocomplete="address-level2" maxlength="100" required placeholder="Votre ville"></div>
+    </div>
+    <div class="twoInputs">
+      <div class="field"><label for="demoEmail">Adresse e-mail</label><input id="demoEmail" name="email" type="email" autocomplete="email" maxlength="180" required placeholder="vous@exemple.fr"></div>
+      <div class="field"><label for="demoTelephone">NumÃ©ro de tÃ©lÃ©phone</label><input id="demoTelephone" name="telephone" type="tel" autocomplete="tel" maxlength="25" required placeholder="06 00 00 00 00"></div>
+    </div>
+    <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true"><label for="demoWebsite">Site internet</label><input id="demoWebsite" name="website" tabindex="-1" autocomplete="off"></div>
+    <label class="checkline" for="demoConsent" style="font-weight:500"><input id="demoConsent" name="consent" type="checkbox" required style="width:auto;flex:none;margin-top:5px"><span>J'autorise BR Solutions Ã  me recontacter par tÃ©lÃ©phone ou e-mail afin d'organiser une dÃ©monstration. <strong>(Obligatoire)</strong></span></label>
+    <p class="subtitle" style="font-size:13px">Vos informations seront envoyÃ©es Ã  BR Solutions uniquement pour traiter cette demande de dÃ©monstration. Vous pouvez retirer votre consentement en rÃ©pondant au message reÃ§u ou en contactant BR Solutions.</p>
+    <div class="actions"><button type="button" class="secondary" onclick="go(5)">Retour</button><button type="submit" class="primary" id="demoSendBtn">Envoyer ma demande</button></div>
+    <p id="demoError" class="error" role="alert" aria-live="polite"></p>
+  </form>
+</div></section>
+
+<section id="s13" class="step hidden"><div class="panel" style="text-align:center;padding-top:50px;padding-bottom:50px">
+  <div style="font-size:54px;color:#0a8f83" aria-hidden="true">âœ“</div>
+  <h2 class="title">Votre demande a bien Ã©tÃ© envoyÃ©e !</h2>
+  <p class="subtitle">Merci ! BR Solutions a reÃ§u votre demande de dÃ©monstration. Notre Ã©quipe pourra vous recontacter avec les coordonnÃ©es transmises.</p>
+  <div class="actions" style="justify-content:center"><button class="primary" onclick="go(1)">Retour Ã  l'accueil</button></div>
+</div></section>
 </main>
 <footer>Simulation indicative : les économies réelles varient selon les offres et les conditions des enseignes. Logos illustratifs de partenaires mentionnés par Tempeos ; disponibilité à vérifier.</footer>
 </div>
@@ -258,6 +290,27 @@ document.getElementById('leadForm').addEventListener('submit',(e)=>{
  else go(11);
 });
 
+function chooseDemo(){decision='demo';plan='';go(12)}
+document.getElementById('demoRequestForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  if(!this.reportValidity())return;
+  const btn=document.getElementById('demoSendBtn');
+  const error=document.getElementById('demoError');
+  error.textContent='';btn.disabled=true;btn.textContent='Envoi en coursâ€¦';
+  const data=Object.fromEntries(new FormData(this).entries());
+  try{
+    const response=await fetch('/api/demo-request',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({nom:data.nom,prenom:data.prenom,code_postal:data.code_postal,
+        ville:data.ville,email:data.email,telephone:data.telephone,
+        website:data.website||'',purpose:'demonstration',consent:document.getElementById('demoConsent').checked})
+    });
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||!result.ok)throw Error(result.error||'Votre demande nâ€™a pas pu Ãªtre envoyÃ©e.');
+    this.reset();go(13);
+  }catch(ex){error.textContent=ex.message;}
+  finally{btn.disabled=false;btn.textContent='Envoyer ma demande';}
+});
 let signwellDocumentId=null, signingProof=null;
 async function startSignWell(){
  const btn=document.getElementById('startSign'),err=document.getElementById('signError');
