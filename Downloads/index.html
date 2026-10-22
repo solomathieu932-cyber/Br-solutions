@@ -229,7 +229,7 @@ button:disabled{cursor:not-allowed}
   <div><div class="field"><label>Numéro de téléphone</label><input name="telephone" required placeholder="06 00 00 00 00"></div><div class="field"><label>Adresse email</label><input name="email" type="email" required placeholder="exemple@email.com"></div></div></div>
   <div class="twoInputs"><div class="field"><label for="voie">Adresse (numéro et rue)</label><input id="voie" name="voie" autocomplete="street-address" required maxlength="140" placeholder="12 rue de la Gare"></div><div class="field"><label for="code_postal">Code postal</label><input id="code_postal" name="code_postal" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" required maxlength="5" placeholder="54230"></div></div>
   <div class="field"><label for="ville">Ville</label><input id="ville" name="ville" autocomplete="address-level2" required maxlength="90" placeholder="Votre ville"></div>
-  <p class="subtitle">Ces coordonnées servent à compléter automatiquement l'en-tête du contrat PDF. Aucun envoi à BR Dashboard.</p>
+
   <input type="hidden" name="souhaite_souscrire" id="fDecision"><input type="hidden" name="tarif" id="fPlan"><input type="hidden" name="economie_estimee" id="fSaving">
   <div class="actions"><button type="button" class="secondary" onclick="go(decision==='oui'?6:5)">Retour</button><button type="submit" class="primary">Continuer</button></div>
   <div id="formMsg"></div>
