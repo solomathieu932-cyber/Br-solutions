@@ -10,7 +10,7 @@
 <style>
 :root{--ink:#142038;--muted:#53627a;--turq:#12c7bd;--turq2:#10aaa4;--orange:#ff7900;--line:#dce3ea;--paper:#fff;--soft:#f5f7f8}
 *{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink)}
-body{min-height:100vh;background:#031a1b;display:flex;align-items:flex-start;justify-content:center;padding:34px 18px;position:relative;overflow-x:hidden;isolation:isolate}
+body{min-height:100vh;background:#031a1b;display:flex;align-items:flex-start;justify-content:center;padding:34px 18px;position:relative;overflow-x:hidden}
 body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 15% 25%,rgba(12,159,151,.26),transparent 40%),radial-gradient(ellipse at 82% 76%,rgba(255,121,0,.1),transparent 42%),linear-gradient(150deg,#051c20,#00100f 62%,#071d21)}
 .partner-wall{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;filter:saturate(.92)}
 .partner{--tilt:0deg;--delay:0s;position:absolute;display:flex;align-items:center;gap:12px;padding:11px 16px;min-width:170px;max-width:245px;border:1px solid rgba(255,255,255,.16);border-radius:18px;background:rgba(255,255,255,.085);box-shadow:0 16px 30px rgba(0,0,0,.18);backdrop-filter:blur(5px);color:rgba(255,255,255,.89);font-size:clamp(14px,1.3vw,18px);font-weight:850;letter-spacing:-.4px;animation:floatPartner 10s ease-in-out infinite alternate;animation-delay:var(--delay);transform:rotate(var(--tilt))}
@@ -72,6 +72,18 @@ button:disabled{opacity:.65;cursor:wait;transform:none}
 @media (max-width:760px){.partner-wall{opacity:.35}.partner:nth-child(n+13){display:none}.logoWrap{gap:10px}.logo{width:99px;min-width:99px;height:48px}.logo span{font-size:17px}}
 @media (max-width:430px){.logo{width:82px;min-width:82px;height:45px;padding:4px}.logo span{font-size:14px}.logoWrap{gap:8px}h1{font-size:23px}}
 @media(prefers-reduced-motion:reduce){.partner{animation:none!important}}
+
+/* Correctif : interaction et affichage SignWell au premier plan */
+html,body,.shell,main,.panel,.step,.contract,.partner-wall{cursor:auto}
+input,textarea,select{cursor:text}
+button,.btn,.choiceCard,.priceCard,a,[role="button"],label.checkline{cursor:pointer}
+button:disabled{cursor:not-allowed}
+.partner-wall,.partner-wall *{pointer-events:none!important;cursor:default}
+#s8{position:relative;z-index:2}
+#signwellContainer{display:none;position:relative;isolation:isolate;width:100%;min-height:0;margin-top:20px;border:0;overflow:visible}
+#signwellContainer.active{display:block;min-height:76vh;min-height:76dvh;border:1px solid #c5dedc;border-radius:16px;background:#fff;box-shadow:0 12px 38px rgba(9,47,48,.12)}
+#signwellContainer iframe{display:block;width:100%!important;min-height:76vh;min-height:76dvh;border:0;position:relative;z-index:1}
+@media(max-width:760px){#s8 .panel{padding:18px 12px}#signwellContainer.active,#signwellContainer iframe{min-height:80vh;min-height:80dvh}}
 </style>
 </head>
 <body>
@@ -199,7 +211,7 @@ button:disabled{opacity:.65;cursor:wait;transform:none}
 <p>Avant le lancement réel, les conditions de vente, la durée, le renouvellement et les informations légales devront être validés.</p>
 <p>Signature de démonstration : <span id="demoSignature">Non renseignée</span></p>
 </div>
-<div class="actions"><button class="secondary" onclick="go(7)">Retour</button><button class="primary" id="startSign" onclick="startSignWell()">Ouvrir la signature SignWell</button></div><p id="signError" class="error" role="alert"></p><p id="signStatus" class="subtitle" aria-live="polite"></p><div id="signwellContainer" style="min-height:0"></div></div></section>
+<div class="actions"><button class="secondary" onclick="go(7)">Retour</button><button class="primary" id="startSign" onclick="startSignWell()">Ouvrir la signature SignWell</button></div><p id="signError" class="error" role="alert"></p><p id="signStatus" class="subtitle" aria-live="polite"></p><div id="signwellContainer" aria-label="Signature électronique SignWell"></div></div></section>
 <section id="s9" class="step hidden"><div class="panel">
 <h2 class="title">Paiement Stripe — test</h2>
 <div class="notice"><strong>Aucun paiement réel.</strong> Stripe n'est pas encore connecté. Ne saisissez aucune information bancaire.</div>
@@ -247,8 +259,9 @@ async function startSignWell(){
   if(!response.ok||!payload.url)throw Error(payload.error||'Impossible de créer le document SignWell');
   signwellDocumentId=payload.documentId;
   if(typeof SignWellEmbed==='undefined')throw Error('Le module SignWell ne s’est pas chargé.');
-  document.getElementById('signStatus').textContent='Signez le contrat dans la fenêtre SignWell.';
-  new SignWellEmbed({url:payload.url,events:{completed:async()=>{
+  document.getElementById('signStatus').textContent='Signez le contrat dans le cadre ci-dessous.';
+  document.getElementById('signwellContainer').classList.add('active');
+  new SignWellEmbed({url:payload.url,containerId:"signwellContainer",events:{completed:async()=>{
    document.getElementById('signStatus').textContent='Vérification de la signature auprès de SignWell…';
    try{const r=await fetch('/api/signwell-status?id='+encodeURIComponent(signwellDocumentId));const j=await r.json();
    if(!r.ok||!j.completed)throw Error('Signature pas encore confirmée : réessayez dans quelques instants.');
@@ -257,7 +270,7 @@ async function startSignWell(){
    document.getElementById('paySigner').textContent=(data.prenom+' '+data.nom).trim();go(9);
    }catch(e){err.textContent=e.message;btn.disabled=false;}
   },closed:()=>{btn.disabled=false;}}}).open();
- }catch(e){err.textContent=e.message;btn.disabled=false;document.getElementById('signStatus').textContent='';}
+ }catch(e){err.textContent=e.message;btn.disabled=false;document.getElementById('signStatus').textContent='';document.getElementById('signwellContainer').classList.remove('active');}
 }
 </script>
 <script src="https://static.signwell.com/assets/embedded.js"></script>
