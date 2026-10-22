@@ -190,7 +190,7 @@ button:disabled{cursor:not-allowed}
 <div class="actions"><button class="secondary" onclick="go(5)">Retour</button><button class="primary" onclick="selectPlan('69 € - abonnement annuel','p69')">Continuer</button></div>
 </div></section>
 
-<section id="s7" class="step hidden"><div class="panel"><h2 class="title">Vos coordonnées</h2><p class="subtitle" id="contactText">Complétez vos informations pour préparer la signature. Aucun envoi au BR Dashboard pendant ce test.</p>
+<section id="s7" class="step hidden"><div class="panel"><h2 class="title">Vos coordonnées</h2><p class="subtitle" id="contactText">Complétez vos informations pour préparer la signature. Ces informations seront intégrées automatiquement à votre contrat.</p>
  <form id="leadForm">
   <div class="twoInputs"><div><div class="field"><label>Nom</label><input name="nom" required placeholder="Votre nom"></div><div class="field"><label>Prénom</label><input name="prenom" required placeholder="Votre prénom"></div></div>
   <div><div class="field"><label>Numéro de téléphone</label><input name="telephone" required placeholder="06 00 00 00 00"></div><div class="field"><label>Adresse email</label><input name="email" type="email" required placeholder="exemple@email.com"></div></div></div>
@@ -205,24 +205,24 @@ button:disabled{cursor:not-allowed}
 
 
 <section id="s8" class="step hidden"><div class="panel">
-<h2 class="title">Contrat de test — BR Solution</h2>
-<div class="notice"><strong>SignWell — mode test.</strong> Le document sera signé via la véritable interface SignWell intégrée. La signature de test n’est pas juridiquement contraignante.</div>
+<h2 class="title">Votre contrat — BR SOLUTIONS</h2>
+<div class="notice"><strong>Signature électronique.</strong> Vérifiez les informations de votre contrat avant de signer. Le PDF complet et ses conditions générales sont accessibles dans le document SignWell.</div>
 <div class="contract">
 <h3>Prévisualisation des coordonnées du contrat</h3>
 <p>Adhérent : <strong id="contractName"></strong><br>E-mail : <strong id="contractEmail"></strong><br>Offre : <strong id="contractPlan"></strong></p>
 <p>Adresse : <strong id="contractAddress"></strong></p>
 <p><strong>PDF fourni :</strong> Contrat de groupement de bénéficiaires, 2 pages, 69 € TTC/an.</p>
 <p class="error">Attention : ses conditions générales prévoient une durée minimale de 2 ans et une résiliation par LRAR avec préavis de 3 mois, incompatibles avec l'offre annuelle destinée aux particuliers. À faire rectifier avant toute utilisation réelle.</p>
-<p>La signature reste en mode test et n'entraîne aucun paiement.</p>
+<p>Après signature, vous serez dirigé vers le paiement sécurisé de l’abonnement annuel de 69 € TTC. Le renouvellement automatique et les modalités de résiliation seront rappelés avant le paiement.</p>
 </div>
 <div class="actions"><button class="secondary" onclick="go(7)">Retour</button><button class="primary" id="startSign" onclick="startSignWell()">Ouvrir la signature SignWell</button></div><p id="signError" class="error" role="alert"></p><p id="signStatus" class="subtitle" aria-live="polite"></p><div id="signwellContainer" aria-label="Signature électronique SignWell"></div></div></section>
 <section id="s9" class="step hidden"><div class="panel">
-<h2 class="title">Paiement Stripe — test</h2>
-<div class="notice"><strong>Aucun paiement réel.</strong> Stripe n'est pas encore connecté. Ne saisissez aucune information bancaire.</div>
-<p>Formule : <strong id="payPlan"></strong></p><p>Montant fictif : <strong id="payAmount"></strong></p><p>Signataire : <strong id="paySigner"></strong></p>
-<p class="subtitle">La signature SignWell de test a été vérifiée. Cette page simule seulement le paiement. Une vraie session Stripe en mode test nécessite une fonction serveur et des clés de test sécurisées.</p>
-<div class="actions"><button class="secondary" onclick="go(8)">Retour</button><button class="primary" onclick="go(10)">Simuler le paiement</button></div></div></section>
-<section id="s10" class="step hidden"><div class="panel"><h2 class="title">Test terminé !</h2><p class="success">Parcours de démonstration terminé.</p><p class="subtitle">Aucune transaction Stripe n’a été effectuée. La signature SignWell de test éventuelle reste consultable dans votre compte SignWell.</p><button class="secondary" onclick="go(1)">Recommencer</button></div></section>
+<h2 class="title">Abonnement annuel — paiement sécurisé Stripe</h2>
+<div class="notice"><strong>69 € TTC chaque année.</strong> En poursuivant, vous serez redirigé vers Stripe Checkout pour confirmer votre abonnement annuel renouvelé automatiquement. Vous pourrez vérifier le montant avant de payer.</div>
+<p>Formule : <strong id="payPlan"></strong></p><p>Montant : <strong id="payAmount"></strong></p><p>Signataire : <strong id="paySigner"></strong></p>
+<p class="subtitle">Votre signature doit être confirmée par SignWell avant le paiement. Votre abonnement ne sera actif qu’après confirmation du paiement par Stripe.</p>
+<div class="actions"><button class="secondary" onclick="go(8)">Retour</button><button class="primary" id="checkoutBtn" onclick="startStripeCheckout()">Continuer vers Stripe — 69 € / an</button></div><p id="checkoutError" class="error" role="alert"></p><p id="payError" class="error" role="alert"></p></div></section>
+<section id="s10" class="step hidden"><div class="panel"><h2 class="title">Retour de Stripe</h2><p class="subtitle">Votre demande a été reçue. Le paiement est vérifié côté serveur ; ce retour ne confirme pas à lui seul l’activation de l’abonnement.</p><button class="secondary" onclick="go(1)">Recommencer</button></div></section>
 <section id="s11" class="step hidden"><div class="panel"><h2 class="title">Merci !</h2><p class="subtitle">Votre parcours est terminé. Aucune information n’a été envoyée, aucune souscription ni paiement effectué.</p></div></section>
 </main>
 <footer>Simulation indicative : les économies réelles varient selon les offres et les conditions des enseignes. Logos illustratifs de partenaires mentionnés par Tempeos ; disponibilité à vérifier.</footer>
@@ -239,7 +239,7 @@ function calculate(){
  rCourses.textContent=euro(rc);rCinema.textContent=euro(rci);rVetements.textContent=euro(rv);rAirbnb.textContent=euro(ra);rMaison.textContent=euro(rm);total.textContent=savings.toLocaleString('fr-FR');go(4)
 }
 function chooseYes(){decision='oui';go(6)}
-function chooseNo(){decision='non';plan='';document.getElementById('contactText').textContent='Merci de compléter vos informations pour terminer la simulation (aucun envoi externe).';go(7)}
+function chooseNo(){decision='non';plan='';document.getElementById('contactText').textContent='Merci de compléter vos informations pour terminer le parcours.';go(7)}
 function selectPlan(v,id){plan=v;document.querySelectorAll('.priceCard').forEach(x=>x.classList.add('selected'));document.getElementById('contactText').textContent='Complétez vos coordonnées pour préremplir le contrat.';setTimeout(()=>go(7),180)}
 document.getElementById('leadForm').addEventListener('submit',(e)=>{
  e.preventDefault();
@@ -259,7 +259,7 @@ document.getElementById('leadForm').addEventListener('submit',(e)=>{
  else go(11);
 });
 
-let signwellDocumentId=null;
+let signwellDocumentId=null, signingProof=null;
 async function startSignWell(){
  const btn=document.getElementById('startSign'),err=document.getElementById('signError');
  err.textContent='';btn.disabled=true;document.getElementById('signStatus').textContent='Préparation du contrat SignWell…';
@@ -269,6 +269,7 @@ async function startSignWell(){
   const payload=await response.json();
   if(!response.ok||!payload.url)throw Error((payload.error||'Impossible de créer le document SignWell')+(payload.documentId?' (ID document : '+payload.documentId+')':''));
   signwellDocumentId=payload.documentId;
+  signingProof=payload.proof||null;
   if(typeof SignWellEmbed==='undefined')throw Error('Le module SignWell ne s’est pas chargé.');
   document.getElementById('signStatus').textContent='Document SignWell créé (état : '+(payload.status||'non précisé')+'). Signez dans le cadre ci-dessous.';
   document.getElementById('signwellContainer').classList.add('active');
@@ -277,11 +278,30 @@ async function startSignWell(){
    try{const r=await fetch('/api/signwell-status?id='+encodeURIComponent(signwellDocumentId));const j=await r.json();
    if(!r.ok||!j.completed)throw Error('Signature pas encore confirmée : réessayez dans quelques instants.');
    document.getElementById('payPlan').textContent=plan;
-   document.getElementById('payAmount').textContent='69 € (test sans débit)';
+   document.getElementById('payAmount').textContent='69 € TTC / an, renouvellement automatique';
    document.getElementById('paySigner').textContent=(data.prenom+' '+data.nom).trim();go(9);
    }catch(e){err.textContent=e.message;btn.disabled=false;}
   },closed:()=>{btn.disabled=false;},error:()=>{err.textContent='SignWell a signalé une erreur. Réessayez avec un nouveau document puis consultez son statut dans votre compte SignWell.';btn.disabled=false;}}}).open();
  }catch(e){err.textContent=e.message;btn.disabled=false;document.getElementById('signStatus').textContent='';document.getElementById('signwellContainer').classList.remove('active');}
+}
+async function startStripeCheckout(){
+ const btn=document.getElementById('checkoutBtn');
+ const err=document.getElementById('checkoutError');
+ if(!signwellDocumentId||!signingProof){err.textContent='Signature non vérifiable : revenez à l’étape précédente.';return;}
+ btn.disabled=true;err.textContent='';
+ try{
+  const r=await fetch('/api/stripe-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({documentId:signwellDocumentId,proof:signingProof})});
+  const body=await r.json();
+  if(!r.ok||!body.url)throw new Error(body.error||'Checkout indisponible');
+  const u=new URL(body.url);if(u.protocol!=='https:'||!u.hostname.endsWith('.stripe.com'))throw new Error('Lien de paiement non valide');
+  window.location.assign(u.href);
+ }catch(e){err.textContent=e.message;btn.disabled=false;}
+}
+const q=new URLSearchParams(window.location.search);
+if(q.get('payment')==='success')go(10);
+if(q.get('payment')==='cancel'){
+ document.getElementById('payError').textContent='Paiement annulé : aucun abonnement n’a été confirmé.';
+ go(9);
 }
 </script>
 <script src="https://static.signwell.com/assets/embedded.js"></script>

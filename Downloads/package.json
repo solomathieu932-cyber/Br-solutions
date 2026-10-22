@@ -1,9 +1,1 @@
-{
-  "name": "br-solutions-signwell",
-  "private": true,
-  "version": "1.0.0",
-  "type": "module",
-  "dependencies": {
-    "pdf-lib": "^1.17.1"
-  }
-}
+{"name":"br-solutions","private":true,"type":"module","version":"2.0.0","dependencies":{"pdf-lib":"^1.17.1","stripe":"^19.1.0"}}
