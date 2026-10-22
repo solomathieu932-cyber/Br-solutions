@@ -33,6 +33,11 @@ button,.btn{border:0;border-radius:14px;padding:14px 18px;font-size:16px;font-we
 footer{border-top:1px solid #dde3e8;padding:18px 32px;color:#63728a;font-size:13px;background:#f8fafb}
 .hidden{display:none!important}.error{margin-top:12px;color:#a21c1c;font-weight:700}.success{color:#08776f;font-weight:800}
 @media(max-width:760px){body{padding:10px}.shell{border-radius:18px}header{padding:20px;align-items:flex-start}.pill{display:none}h1{font-size:28px}.logo{width:56px;height:56px}.grid2,.twoInputs,.choice,.cards{grid-template-columns:1fr}.title{font-size:28px}main{padding:20px 14px}.panel{padding:22px}.result{font-size:52px}}
+
+.notice{background:#fff7df;border:1px solid #eed08b;border-radius:14px;padding:16px;line-height:1.5;margin:16px 0}
+.contract{background:#fff;border:1px solid #ccd8e1;border-radius:15px;padding:22px;max-height:350px;overflow:auto;line-height:1.6}
+.checkline{display:flex;gap:10px;align-items:flex-start;margin:15px 0}.checkline input{width:auto;margin-top:5px}
+#demoSignature{font:italic 25px Georgia,serif;color:#117d76}
 </style>
 </head>
 <body>
@@ -107,12 +112,31 @@ footer{border-top:1px solid #dde3e8;padding:18px 32px;color:#63728a;font-size:13
   <div class="twoInputs"><div><div class="field"><label>Nom</label><input name="nom" required placeholder="Votre nom"></div><div class="field"><label>Prénom</label><input name="prenom" required placeholder="Votre prénom"></div></div>
   <div><div class="field"><label>Numéro de téléphone</label><input name="telephone" required placeholder="06 00 00 00 00"></div><div class="field"><label>Adresse email</label><input name="email" type="email" required placeholder="exemple@email.com"></div></div></div>
   <input type="hidden" name="souhaite_souscrire" id="fDecision"><input type="hidden" name="tarif" id="fPlan"><input type="hidden" name="economie_estimee" id="fSaving">
-  <div class="actions"><button type="button" class="secondary" onclick="go(decision==='oui'?6:5)">Retour</button><button type="submit" class="primary">Envoyer mes informations</button></div>
+  <div class="actions"><button type="button" class="secondary" onclick="go(decision==='oui'?6:5)">Retour</button><button type="submit" class="primary">Continuer</button></div>
   <div id="formMsg"></div>
  </form></div>
 </section>
 
-<section id="s8" class="step hidden"><div class="panel"><h2 class="title">Merci !</h2><p class="subtitle">Votre demande a bien été transmise à BR Solution.</p><p class="success">Vos informations ont été enregistrées.</p></div></section>
+
+<section id="s8" class="step hidden"><div class="panel">
+<h2 class="title">Contrat de test — BR Solution</h2>
+<div class="notice"><strong>SignWell — mode test.</strong> Le document sera signé via la véritable interface SignWell intégrée. La signature de test n’est pas juridiquement contraignante.</div>
+<div class="contract">
+<h3>Club Privé Tempeos — contrat fictif</h3>
+<p>Adhérent : <strong id="contractName"></strong><br>E-mail : <strong id="contractEmail"></strong><br>Offre : <strong id="contractPlan"></strong></p>
+<p>Ce document sert uniquement à tester le parcours de souscription. Aucun contrat réel n'est conclu, aucun service n'est commandé et aucun paiement n'est exigible.</p>
+<p>Avant le lancement réel, les conditions de vente, la durée, le renouvellement et les informations légales devront être validés.</p>
+<p>Signature de démonstration : <span id="demoSignature">Non renseignée</span></p>
+</div>
+<div class="actions"><button class="secondary" onclick="go(7)">Retour</button><button class="primary" id="startSign" onclick="startSignWell()">Ouvrir la signature SignWell</button></div><p id="signError" class="error" role="alert"></p><p id="signStatus" class="subtitle" aria-live="polite"></p><div id="signwellContainer" style="min-height:0"></div></div></section>
+<section id="s9" class="step hidden"><div class="panel">
+<h2 class="title">Paiement Stripe — test</h2>
+<div class="notice"><strong>Aucun paiement réel.</strong> Stripe n'est pas encore connecté. Ne saisissez aucune information bancaire.</div>
+<p>Formule : <strong id="payPlan"></strong></p><p>Montant fictif : <strong id="payAmount"></strong></p><p>Signataire : <strong id="paySigner"></strong></p>
+<p class="subtitle">La signature SignWell de test a été vérifiée. Cette page simule seulement le paiement. Une vraie session Stripe en mode test nécessite une fonction serveur et des clés de test sécurisées.</p>
+<div class="actions"><button class="secondary" onclick="go(8)">Retour</button><button class="primary" onclick="go(10)">Simuler le paiement</button></div></div></section>
+<section id="s10" class="step hidden"><div class="panel"><h2 class="title">Test terminé !</h2><p class="success">Parcours de démonstration terminé.</p><p class="subtitle">Aucune signature SignWell ni transaction Stripe n'a été créée.</p><button class="secondary" onclick="go(1)">Recommencer</button></div></section>
+<section id="s11" class="step hidden"><div class="panel"><h2 class="title">Merci !</h2><p class="subtitle">Votre réponse a été transmise à BR Solution. Aucune souscription ni paiement effectué.</p></div></section>
 </main>
 <footer>Simulation indicative basée sur les montants renseignés. Les économies réelles peuvent varier selon les offres disponibles.</footer>
 </div>
@@ -120,7 +144,7 @@ footer{border-top:1px solid #dde3e8;padding:18px 32px;color:#63728a;font-size:13
 <script>
 const ENDPOINT='https://br-dashboard.br-dashboard.workers.dev/api/forms/1ade82007ef5646bf24e/submit';
 let decision='', plan='', savings=0;
-function go(n){document.querySelectorAll('.step').forEach(x=>x.classList.add('hidden'));document.getElementById('s'+n).classList.remove('hidden');document.getElementById('bar').style.width=Math.min(100,n*14)+'%';window.scrollTo({top:0,behavior:'smooth'})}
+function go(n){document.querySelectorAll('.step').forEach(x=>x.classList.add('hidden'));document.getElementById('s'+n).classList.remove('hidden');document.getElementById('bar').style.width=Math.min(100,n*9.1)+'%';window.scrollTo({top:0,behavior:'smooth'})}
 function num(id){return Math.max(0,Number(document.getElementById(id).value)||0)}
 function euro(v){return Math.round(v).toLocaleString('fr-FR')+' €'}
 function calculate(){
@@ -138,10 +162,42 @@ document.getElementById('leadForm').addEventListener('submit',async(e)=>{
  try{
   const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
   if(!r.ok) throw new Error('HTTP '+r.status);
-  go(8);
+  if(decision==='oui'){
+   const fullName=[data.prenom,data.nom].filter(Boolean).join(' ');
+   document.getElementById('contractName').textContent=fullName;
+   document.getElementById('contractEmail').textContent=data.email||'';
+   document.getElementById('contractPlan').textContent=plan;
+   document.getElementById('signerName').value=fullName;
+   go(8);
+  }else go(11);
  }catch(err){
   msg.className='error';msg.textContent="Impossible d’envoyer les informations. Vérifiez la configuration de l’endpoint BR Dashboard.";
  }
 });
+
+let signwellDocumentId=null;
+async function startSignWell(){
+ const btn=document.getElementById('startSign'),err=document.getElementById('signError');
+ err.textContent='';btn.disabled=true;document.getElementById('signStatus').textContent='Préparation du contrat SignWell…';
+ try{
+  const data=Object.fromEntries(new FormData(document.getElementById('leadForm')).entries());
+  const response=await fetch('/api/signwell-create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:(data.prenom+' '+data.nom).trim(),email:data.email,plan})});
+  const payload=await response.json();
+  if(!response.ok||!payload.url)throw Error(payload.error||'Impossible de créer le document SignWell');
+  signwellDocumentId=payload.documentId;
+  if(typeof SignWellEmbed==='undefined')throw Error('Le module SignWell ne s’est pas chargé.');
+  document.getElementById('signStatus').textContent='Signez le contrat dans la fenêtre SignWell.';
+  new SignWellEmbed({url:payload.url,events:{completed:async()=>{
+   document.getElementById('signStatus').textContent='Vérification de la signature auprès de SignWell…';
+   try{const r=await fetch('/api/signwell-status?id='+encodeURIComponent(signwellDocumentId));const j=await r.json();
+   if(!r.ok||!j.completed)throw Error('Signature pas encore confirmée : réessayez dans quelques instants.');
+   document.getElementById('payPlan').textContent=plan;
+   document.getElementById('payAmount').textContent=plan.startsWith('129')?'129 € (fictifs)':'79 € (fictifs)';
+   document.getElementById('paySigner').textContent=(data.prenom+' '+data.nom).trim();go(9);
+   }catch(e){err.textContent=e.message;btn.disabled=false;}
+  },closed:()=>{btn.disabled=false;}}}).open();
+ }catch(e){err.textContent=e.message;btn.disabled=false;document.getElementById('signStatus').textContent='';}
+}
 </script>
+<script src="https://static.signwell.com/assets/embedded.js"></script>
 </body></html>
