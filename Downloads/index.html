@@ -142,7 +142,6 @@ footer{border-top:1px solid #dde3e8;padding:18px 32px;color:#63728a;font-size:13
 </div>
 
 <script>
-const ENDPOINT='https://br-dashboard.br-dashboard.workers.dev/api/forms/1ade82007ef5646bf24e/submit';
 let decision='', plan='', savings=0;
 function go(n){document.querySelectorAll('.step').forEach(x=>x.classList.add('hidden'));document.getElementById('s'+n).classList.remove('hidden');document.getElementById('bar').style.width=Math.min(100,n*9.1)+'%';window.scrollTo({top:0,behavior:'smooth'})}
 function num(id){return Math.max(0,Number(document.getElementById(id).value)||0)}
@@ -155,24 +154,15 @@ function calculate(){
 function chooseYes(){decision='oui';go(6)}
 function chooseNo(){decision='non';plan='';document.getElementById('contactText').textContent='Merci de compléter vos informations afin de transmettre votre réponse.';go(7)}
 function selectPlan(v,id){plan=v;document.querySelectorAll('.priceCard').forEach(x=>x.classList.remove('selected'));document.getElementById(id).classList.add('selected');document.getElementById('contactText').textContent='Merci de compléter vos informations pour finaliser votre demande de carte.';setTimeout(()=>go(7),180)}
-document.getElementById('leadForm').addEventListener('submit',async(e)=>{
- e.preventDefault();const msg=document.getElementById('formMsg');msg.className='';msg.textContent='Envoi en cours…';
+document.getElementById('leadForm').addEventListener('submit',(e)=>{
+ e.preventDefault();
+ const form=e.currentTarget;
+ if(!form.reportValidity())return;
+ const msg=document.getElementById('formMsg');
+ msg.className='';msg.textContent='';
  fDecision.value=decision;fPlan.value=plan;fSaving.value=savings+' €';
- const data=Object.fromEntries(new FormData(e.target).entries());
- try{
-  const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  if(!r.ok) throw new Error('HTTP '+r.status);
-  if(decision==='oui'){
-   const fullName=[data.prenom,data.nom].filter(Boolean).join(' ');
-   document.getElementById('contractName').textContent=fullName;
-   document.getElementById('contractEmail').textContent=data.email||'';
-   document.getElementById('contractPlan').textContent=plan;
-   document.getElementById('signerName').value=fullName;
-   go(8);
-  }else go(11);
- }catch(err){
-  msg.className='error';msg.textContent="Impossible d’envoyer les informations. Vérifiez la configuration de l’endpoint BR Dashboard.";
- }
+ if(decision==='oui')go(8);
+ else go(11);
 });
 
 let signwellDocumentId=null;
