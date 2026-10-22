@@ -34,10 +34,20 @@ export default async function handler(req,res){
   for(const [x,y,value] of entries)put(x,y,value);
   // Signing date and handwritten signature are collected by SignWell, not prefilled.
   const base64=Buffer.from(await pdf.save()).toString('base64');
-  const payload={test_mode:false,embedded_signing:true,with_signature_page:true,draft:false,expires_in:30,reminders:false,
+  const payload={test_mode:false,embedded_signing:true,with_signature_page:false,draft:false,expires_in:30,reminders:false,
    name:'BR SOLUTIONS — Contrat individuel — 69 euros annuel',
    files:[{name:'contrat-individuel-pre-rempli.pdf',file_base64:base64}],
-   recipients:[{id:'1',name:`${d.prenom} ${d.nom}`,email:d.email}],language:'fr'};
+   recipients:[{id:'1',name:`${d.prenom} ${d.nom}`,email:d.email}],
+   fields:[[
+    // SignWell coordinates in pixels (96 dpi), origin at top-left; pages are 1-indexed.
+    // Page 1: large signature area opposite the date and acceptance text.
+    {api_id:'Signature_Page_1',type:'Signature',page:1,recipient_id:'1',
+     required:true,x:300,y:955,width:400,height:80},
+    // Page 2: 'Signature de l’Abonné(e)' at the bottom-right of the CGV.
+    {api_id:'Signature_CGV_Page_2',type:'Signature',page:2,recipient_id:'1',
+     required:true,x:415,y:1056,width:330,height:58}
+   ]],
+   language:'fr'};
   const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','X-Api-Key':key},body:JSON.stringify(payload)});
   const result=await r.json().catch(()=>({}));
   if(!r.ok)return res.status(502).json({error:`SignWell a refusé le document (HTTP ${r.status}). Vérifiez la configuration et le compte.`});
