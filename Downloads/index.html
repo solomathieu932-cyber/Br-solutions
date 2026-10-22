@@ -254,12 +254,12 @@ async function startSignWell(){
  err.textContent='';btn.disabled=true;document.getElementById('signStatus').textContent='Préparation du contrat SignWell…';
  try{
   const data=Object.fromEntries(new FormData(document.getElementById('leadForm')).entries());
-  const response=await fetch('/api/signwell-create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:(data.prenom+' '+data.nom).trim(),email:data.email,plan})});
+  const response=await fetch('/api/signwell-create',{method:'POST',headers:{'Content-Type':'application/json','Cache-Control':'no-cache'},cache:'no-store',body:JSON.stringify({name:(data.prenom+' '+data.nom).trim(),email:data.email,plan})});
   const payload=await response.json();
-  if(!response.ok||!payload.url)throw Error(payload.error||'Impossible de créer le document SignWell');
+  if(!response.ok||!payload.url)throw Error((payload.error||'Impossible de créer le document SignWell')+(payload.documentId?' (ID document : '+payload.documentId+')':''));
   signwellDocumentId=payload.documentId;
   if(typeof SignWellEmbed==='undefined')throw Error('Le module SignWell ne s’est pas chargé.');
-  document.getElementById('signStatus').textContent='Signez le contrat dans le cadre ci-dessous.';
+  document.getElementById('signStatus').textContent='Document SignWell créé (état : '+(payload.status||'non précisé')+'). Signez dans le cadre ci-dessous.';
   document.getElementById('signwellContainer').classList.add('active');
   new SignWellEmbed({url:payload.url,containerId:"signwellContainer",events:{completed:async()=>{
    document.getElementById('signStatus').textContent='Vérification de la signature auprès de SignWell…';
@@ -269,7 +269,7 @@ async function startSignWell(){
    document.getElementById('payAmount').textContent=plan.startsWith('129')?'129 € (fictifs)':'79 € (fictifs)';
    document.getElementById('paySigner').textContent=(data.prenom+' '+data.nom).trim();go(9);
    }catch(e){err.textContent=e.message;btn.disabled=false;}
-  },closed:()=>{btn.disabled=false;}}}).open();
+  },closed:()=>{btn.disabled=false;},error:()=>{err.textContent='SignWell a signalé une erreur. Réessayez avec un nouveau document puis consultez son statut dans votre compte SignWell.';btn.disabled=false;}}}).open();
  }catch(e){err.textContent=e.message;btn.disabled=false;document.getElementById('signStatus').textContent='';document.getElementById('signwellContainer').classList.remove('active');}
 }
 </script>
