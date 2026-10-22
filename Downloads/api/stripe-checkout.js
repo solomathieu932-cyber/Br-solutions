@@ -29,7 +29,7 @@ export default async function handler(req,res){
     const stripe=new Stripe(STRIPE_SECRET_KEY);
     const price=await stripe.prices.retrieve(STRIPE_PRICE_ID);
     if(!price.livemode||!price.active||price.currency!=='eur'||price.unit_amount!==6900||price.recurring?.interval!=='year'||price.recurring?.interval_count!==1)return err(res,503,'Le tarif Stripe doit être de 69 € TTC par an');
-    const origin='https://www.br-solutions-dash.fr';
+    const origin='https://brsolutionstempeos.com';
     const session=await stripe.checkout.sessions.create({
       mode:'subscription',customer_email:email,line_items:[{price:STRIPE_PRICE_ID,quantity:1}],
       success_url:origin+'/?payment=success&session_id={CHECKOUT_SESSION_ID}',
