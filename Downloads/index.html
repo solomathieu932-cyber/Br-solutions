@@ -311,8 +311,8 @@ if(q.get('payment')==='success'){
    const result=await response.json();
    if(!response.ok)throw Error(result.error||'Vérification indisponible.');
    if(result.confirmed){
-    if(title)title.textContent='Abonnement confirmé';
-    if(message)message.textContent='Paiement Stripe confirmé. Votre abonnement de 69 € TTC par an est actif. Pensez à conserver votre justificatif.';
+    if(title)title.textContent='Paiement confirmÃ© !';
+    if(message)message.textContent='Votre abonnement annuel de 69 â‚¬ TTC a bien Ã©tÃ© enregistrÃ©. Vous recevrez vos informations de connexion par e-mail sous 24 a 48 heures. Merci pour votre confiance et bienvenue chez BR Solutions !';
    }else{
     if(title)title.textContent='Paiement en cours de vérification';
     if(message)message.textContent='Aucune confirmation de paiement pour le moment. Consultez votre reçu Stripe avant de réessayer pour éviter un double paiement.';
