@@ -102,6 +102,17 @@ button:disabled{cursor:not-allowed}
 .demo-thanks .actions{justify-content:center}
 @media(max-width:760px){.choice-demo,#demoRequestForm .twoInputs{grid-template-columns:1fr}.choice-demo .demo-choice{grid-column:auto}.choice-demo .choiceCard{min-height:120px}}
 
+
+/* Choix de disponibilites pour les demonstrations */
+.demo-dispos{border:1px solid #cce7e3;border-radius:16px;background:#f5fbfa;padding:20px 22px;margin:20px 0 18px;min-width:0}
+.demo-dispos legend{font-size:19px;font-weight:800;color:#146c67;padding:0 6px}
+.demo-dispos .subtitle{font-size:14px;margin:5px 0 19px}
+.demo-dispos-list{margin-bottom:19px}
+.demo-dispos-list>strong{display:block;margin-bottom:8px}
+.demo-dispos-option{display:flex;align-items:center;gap:12px;font-weight:600;line-height:1.4;padding:7px 0;margin:0;cursor:pointer}
+.demo-dispos-option input{appearance:auto;-webkit-appearance:checkbox;accent-color:#0bafa5;width:19px;height:19px;flex:0 0 19px;margin:0;cursor:pointer}
+.demo-dispos-hint{font-size:12px;color:#586977;margin:4px 0 0}
+
 </style>
 </head>
 <body>
@@ -150,7 +161,7 @@ button:disabled{cursor:not-allowed}
 
 <div class="shell">
 <header>
- <div class="logoWrap"><div class="logo" aria-hidden="true"><span>tempeos</span></div><div><h1>Club Privé Tempeos</h1><div class="by">by BR Solution</div></div></div>
+ <div class="logoWrap"><div class="logo" aria-hidden="true"><span>tempeos</span></div><div><h1>Club Privé Tempeos</h1><div class="by">by BR Solutions</div></div></div>
  <div class="pill">Carte avantages pour particuliers</div>
 </header>
 <div class="progress"><div id="bar" style="width:16%"></div></div>
@@ -264,7 +275,24 @@ button:disabled{cursor:not-allowed}
   </div>
   <div class="demo-honeypot" aria-hidden="true"><label for="demoWebsite">Site internet</label><input id="demoWebsite" name="website" tabindex="-1" autocomplete="off"></div>
   <label class="checkline demo-consent" for="demoConsent"><input id="demoConsent" name="consent" type="checkbox" required><span>J'autorise BR Solutions à me recontacter par téléphone ou e-mail afin d'organiser une démonstration. <strong>(Obligatoire)</strong></span></label>
-  <p class="subtitle demo-privacy">Vos informations seront transmises à BR Solutions uniquement pour traiter cette demande de démonstration. Vous pouvez retirer votre consentement en répondant au message reçu ou en contactant BR Solutions.</p>
+  <fieldset class="demo-dispos" id="demoDisponibilites"><legend>Vos disponibilités pour une démonstration</legend>
+<p class="subtitle">Merci d'indiquer vos disponibilités pour une démonstration (vous pouvez cocher plusieurs disponibilités).</p>
+<div class="demo-dispos-list"><strong>Vos jours disponibles *</strong>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_jours" value="Lundi"><span>Lundi</span></label>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_jours" value="Mardi"><span>Mardi</span></label>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_jours" value="Mercredi"><span>Mercredi</span></label>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_jours" value="Jeudi"><span>Jeudi</span></label>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_jours" value="Vendredi"><span>Vendredi</span></label>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_jours" value="Samedi"><span>Samedi</span></label>
+</div>
+<div class="demo-dispos-list"><strong>Vos créneaux horaires *</strong>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_creneaux" value="8h-10h"><span>8h-10h</span></label>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_creneaux" value="10h-12h"><span>10h-12h</span></label>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_creneaux" value="12h-14h"><span>12h-14h</span></label>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_creneaux" value="14h-16h"><span>14h-16h</span></label>
+<label class="demo-dispos-option"><input type="checkbox" name="demo_creneaux" value="16h-18h"><span>16h-18h</span></label>
+</div><p class="demo-dispos-hint">* Au moins un jour et un créneau sont obligatoires.</p></fieldset>
+<p class="subtitle demo-privacy">Vos informations seront transmises à BR Solutions uniquement pour traiter cette demande de démonstration. Vous pouvez retirer votre consentement en répondant au message reçu ou en contactant BR Solutions.</p>
   <div class="actions"><button type="button" class="secondary" onclick="go(5)">Retour</button><button type="submit" class="primary" id="demoSendBtn">Envoyer ma demande</button></div>
   <p id="demoError" class="error" role="alert" aria-live="polite"></p>
  </form>
@@ -319,12 +347,16 @@ document.getElementById('demoRequestForm').addEventListener('submit', async func
  const error=document.getElementById('demoError');
  error.textContent='';btn.disabled=true;btn.textContent='Envoi en cours…';
  const data=Object.fromEntries(new FormData(this).entries());
+ const jours=[...this.querySelectorAll('input[name="demo_jours"]:checked')].map(x=>x.value);
+ const creneaux=[...this.querySelectorAll('input[name="demo_creneaux"]:checked')].map(x=>x.value);
+ if(!jours.length||!creneaux.length){error.textContent='Sélectionnez au moins un jour et un créneau horaire.';btn.disabled=false;btn.textContent='Envoyer ma demande';return;}
+
  try{
   const response=await fetch('/api/demo-request',{
    method:'POST',headers:{'Content-Type':'application/json'},
    body:JSON.stringify({nom:data.nom,prenom:data.prenom,code_postal:data.code_postal,
     ville:data.ville,email:data.email,telephone:data.telephone,
-    website:data.website||'',purpose:'demonstration',consent:document.getElementById('demoConsent').checked})
+    website:data.website||'',jours,creneaux,purpose:'demonstration',consent:document.getElementById('demoConsent').checked})
   });
   const result=await response.json().catch(()=>({}));
   if(!response.ok||!result.ok)throw Error(result.error||'Votre demande n’a pas pu être envoyée.');

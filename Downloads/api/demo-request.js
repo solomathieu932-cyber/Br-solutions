@@ -9,6 +9,8 @@ const escapeHtml = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;'
 function buildEmail(d, timestamp){
  const safe = Object.fromEntries(Object.entries(d).map(([k,v]) => [k,escapeHtml(v)]));
  const fullName = `${safe.prenom} ${safe.nom}`;
+ const safeJours=d.jours.map(escapeHtml).join(', ');
+ const safeCreneaux=d.creneaux.map(escapeHtml).join(', ');
  const telHref = 'tel:' + d.telephone.replace(/[^\d+]/g,'');
  const mailHref = 'mailto:' + encodeURIComponent(d.email).replace(/%40/g,'@');
  const localDate = new Intl.DateTimeFormat('fr-FR',{
@@ -34,6 +36,8 @@ function buildEmail(d, timestamp){
 <tr><td style="padding:0 32px 24px;color:#60717c;font-size:15px;line-height:1.65">${fullName} souhaite découvrir les avantages du Club Privé Tempeos et être recontacté. Voici ses coordonnées.</td></tr>
 <tr><td style="padding:0 32px 8px;color:#172d39;font-weight:800;font-size:16px">Informations du prospect</td></tr>
 <tr><td style="padding:0 32px 22px"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;border:1px solid #e6eeee;border-radius:12px;overflow:hidden">${rows}</table></td></tr>
+<tr><td style="padding:0 32px 8px;color:#172d39;font-weight:800;font-size:16px">Disponibilités pour la démonstration</td></tr>
+<tr><td style="padding:0 32px 20px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f0faf8;border:1px solid #d7eeea;border-radius:12px"><tr><td style="padding:16px 18px;font:700 13px Arial,sans-serif;color:#28615e">Jours disponibles<br><span style="font-size:15px;line-height:2;color:#142b37">${safeJours}</span></td></tr><tr><td style="padding:14px 18px;border-top:1px solid #d7eeea;font:700 13px Arial,sans-serif;color:#28615e">Créneaux horaires<br><span style="font-size:15px;line-height:2;color:#142b37">${safeCreneaux}</span></td></tr></table></td></tr>
 <tr><td align="center" style="padding:0 32px 20px"><table role="presentation" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" style="padding:5px"><a href="${escapeHtml(telHref)}" style="display:inline-block;box-sizing:border-box;width:100%;padding:15px 10px;border-radius:11px;background:#0bafa5;color:#fff;text-decoration:none;font-size:14px;font-weight:800;text-align:center">📞 Appeler le prospect</a></td><td align="center" style="padding:5px"><a href="${escapeHtml(mailHref)}" style="display:inline-block;box-sizing:border-box;width:100%;padding:14px 10px;border-radius:11px;border:1px solid #d6e5e7;background:#fff;color:#0c7471;text-decoration:none;font-size:14px;font-weight:800;text-align:center">✉ Répondre par e-mail</a></td></tr></table></td></tr>
 <tr><td style="padding:0 32px 25px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f0faf8;border-radius:12px"><tr><td style="padding:17px 19px;font-size:13px;line-height:1.7;color:#28615e"><strong style="color:#126b64">Consentement confirmé</strong><br>Le prospect autorise BR Solutions à le recontacter par téléphone ou e-mail uniquement pour organiser une démonstration.<br><strong>Date de la demande :</strong> ${escapeHtml(localDate)} (heure de Paris)</td></tr></table></td></tr>
 <tr><td style="background:#f8fafb;border-top:1px solid #e7edef;padding:20px 32px;text-align:center;color:#82919a;font-size:12px;line-height:1.7">Notification automatique envoyée depuis <a href="https://brsolutionstempeos.com/" style="color:#0b948d;text-decoration:none">brsolutionstempeos.com</a><br>Message interne destiné à BR Solutions — informations personnelles à traiter confidentiellement.</td></tr>
@@ -52,6 +56,12 @@ export default async function handler(req,res){
  const body=req.body||{};
  if(body.website)return res.status(200).json({ok:true}); // filtre antispam invisible
  const d={nom:pick(body.nom,80),prenom:pick(body.prenom,80),code_postal:pick(body.code_postal,5),ville:pick(body.ville,100),email:pick(body.email,180),telephone:pick(body.telephone,25)};
+ const joursPossibles=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+ const creneauxPossibles=['8h-10h','10h-12h','12h-14h','14h-16h','16h-18h'];
+ const validChoices=(list,possible)=>Array.isArray(list)&&list.length>0&&list.length<=possible.length&&new Set(list).size===list.length&&list.every(v=>typeof v==='string'&&possible.includes(v));
+ if(!validChoices(body.jours,joursPossibles)||!validChoices(body.creneaux,creneauxPossibles))return reply(res,400,'Choisissez au moins un jour et un créneau horaire.');
+ d.jours=joursPossibles.filter(v=>body.jours.includes(v));
+ d.creneaux=creneauxPossibles.filter(v=>body.creneaux.includes(v));
  if(!d.nom||!d.prenom||!/^[0-9]{5}$/.test(d.code_postal)||!d.ville||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)||!/^\+?[0-9 ()+.-]{8,25}$/.test(d.telephone)||body.consent!==true||body.purpose!=='demonstration')return reply(res,400,'Merci de compléter tous les champs et d’autoriser la prise de contact.');
  const now=new Date();
  const {html,localDate}=buildEmail(d,now);
@@ -59,6 +69,7 @@ export default async function handler(req,res){
   'NOUVEAU PROSPECT — DEMANDE DE DÉMONSTRATION BR SOLUTIONS','',
   'Nom : '+d.nom, 'Prénom : '+d.prenom, 'Code postal : '+d.code_postal,
   'Ville : '+d.ville, 'E-mail : '+d.email, 'Téléphone : '+d.telephone,'',
+  'Jours disponibles : '+d.jours.join(', '), 'Créneaux horaires : '+d.creneaux.join(', '),'',
   'Objet : demande de démonstration sans souscription.',
   'Consentement au recontact : OUI.',
   'Date : '+localDate+' (heure de Paris)', 'Site : https://brsolutionstempeos.com/'
