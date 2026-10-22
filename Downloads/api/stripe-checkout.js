@@ -5,7 +5,7 @@ export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');
  if(req.method!=='POST')return json(res,405,'Méthode non autorisée');
  const {STRIPE_SECRET_KEY,STRIPE_PRICE_ID,SIGNWELL_API_KEY,SIGNING_PROOF_SECRET}=process.env;
- if(process.env.ENABLE_LIVE_CHECKOUT!=='true'||!STRIPE_SECRET_KEY||!STRIPE_PRICE_ID||!SIGNWELL_API_KEY||!SIGNING_PROOF_SECRET)return json(res,503,'Paiement en cours de configuration');
+ if(!STRIPE_SECRET_KEY||!STRIPE_PRICE_ID||!SIGNWELL_API_KEY||!SIGNING_PROOF_SECRET||!process.env.STRIPE_WEBHOOK_SECRET)return json(res,503,'Paiement indisponible : configuration Stripe incomplète');
  if(!STRIPE_SECRET_KEY.startsWith('sk_live_'))return json(res,503,'Clé Stripe de production requise');
  const {documentId,proof}=req.body||{};
  if(typeof documentId!=='string'||!/^[0-9a-f-]{36}$/i.test(documentId)||typeof proof!=='string')return json(res,400,'Signature invalide');
@@ -23,7 +23,7 @@ export default async function handler(req,res){
   if(typeof email!=='string'||createHmac('sha256',SIGNING_PROOF_SECRET).update(email.trim().toLowerCase()).digest('hex')!==emailHash)return json(res,403,'Bénéficiaire non confirmé');
   const stripe=new Stripe(STRIPE_SECRET_KEY);
   const price=await stripe.prices.retrieve(STRIPE_PRICE_ID);
-  if(!price.active||price.currency!=='eur'||price.unit_amount!==6900||price.recurring?.interval!=='year'||price.recurring?.interval_count!==1)return json(res,503,'Tarif Stripe incompatible avec 69 euros annuels');
+  if(!price.livemode||!price.active||price.currency!=='eur'||price.unit_amount!==6900||price.recurring?.interval!=='year'||price.recurring?.interval_count!==1)return json(res,503,'Tarif Stripe incompatible avec 69 euros annuels');
   const origin='https://www.br-solutions-dash.fr';
   const session=await stripe.checkout.sessions.create({mode:'subscription',customer_email:email,line_items:[{price:STRIPE_PRICE_ID,quantity:1}],success_url:origin+'/?payment=success&session_id={CHECKOUT_SESSION_ID}',cancel_url:origin+'/?payment=cancel',client_reference_id:documentId,metadata:{signwell_document_id:documentId},subscription_data:{metadata:{signwell_document_id:documentId}},billing_address_collection:'required',allow_promotion_codes:false});
   return res.status(200).json({url:session.url});

@@ -297,7 +297,29 @@ async function startStripeCheckout(){
  }catch(e){err.textContent=e.message;btn.disabled=false;}
 }
 const q=new URLSearchParams(window.location.search);
-if(q.get('payment')==='success')go(10);
+if(q.get('payment')==='success'){
+ go(10);
+ const title=document.querySelector('#s10 h2');
+ const message=document.querySelector('#s10 .subtitle');
+ if(title)title.textContent='VÃ©rification du paiement Stripe';
+ if(message)message.textContent='Nous vÃ©rifions auprÃ¨s de Stripe si votre abonnement est confirmÃ©â€¦';
+ const sid=q.get('session_id');
+ (async()=>{
+  try{
+   if(!sid)throw new Error('Identifiant de paiement manquant.');
+   const r=await fetch('/api/stripe-session-status?session_id='+encodeURIComponent(sid),{cache:'no-store'});
+   const j=await r.json();
+   if(!r.ok)throw new Error(j.error||'VÃ©rification temporairement indisponible.');
+   if(j.confirmed){
+    if(title)title.textContent='Paiement confirmÃ©';
+    if(message)message.textContent='Stripe confirme votre abonnement annuel Ã  69 â‚¬ TTC. Vous recevrez vos justificatifs selon les paramÃ¨tres de votre compte Stripe.';
+   }else{
+    if(title)title.textContent='Paiement non encore confirmÃ©';
+    if(message)message.textContent='Votre abonnement nâ€™est pas confirmÃ©. Consultez votre reÃ§u ou contactez BR Solutions avant de recommencer.';
+   }
+  }catch(e){if(title)title.textContent='VÃ©rification en attente';if(message)message.textContent=e.message;}
+ })();
+}
 if(q.get('payment')==='cancel'){
  document.getElementById('payError').textContent='Paiement annulé : aucun abonnement n’a été confirmé.';
  go(9);

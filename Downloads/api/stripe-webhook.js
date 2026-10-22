@@ -1,19 +1,25 @@
 import Stripe from 'stripe';
-export const config={api:{bodyParser:false}};
-async function getRaw(req){const chunks=[];for await(const chunk of req)chunks.push(typeof chunk==='string'?Buffer.from(chunk):chunk);return Buffer.concat(chunks);}
+// Stripe keeps the authoritative subscription/payment records. This endpoint
+// verifies webhooks and logs identifiers only; it does NOT provision access
+// or synchronize an external CRM/dashboard.
+export const config = {api:{bodyParser:false}};
+async function rawBody(req){const parts=[];for await(const part of req)parts.push(Buffer.isBuffer(part)?part:Buffer.from(part));return Buffer.concat(parts);}
 export default async function handler(req,res){
- if(req.method!=='POST')return res.status(405).send('Méthode non autorisée');
+ if(req.method!=='POST')return res.status(405).json({error:'Méthode non autorisée'});
  const {STRIPE_SECRET_KEY,STRIPE_WEBHOOK_SECRET}=process.env;
- if(!STRIPE_SECRET_KEY||!STRIPE_WEBHOOK_SECRET)return res.status(503).send('Webhook non configuré');
+ if(!STRIPE_SECRET_KEY||!STRIPE_WEBHOOK_SECRET)return res.status(503).json({error:'Webhook non configuré'});
+ if(!STRIPE_SECRET_KEY.startsWith('sk_live_'))return res.status(503).json({error:'Clé Stripe réelle requise'});
+ let event;
  try{
   const stripe=new Stripe(STRIPE_SECRET_KEY);
-  const event=stripe.webhooks.constructEvent(await getRaw(req),req.headers['stripe-signature'],STRIPE_WEBHOOK_SECRET);
-  // À relier à un stockage transactionnel persistant et idempotent avant activation réelle.
-  // Un 503 empêche d'acquitter des paiements que le système ne sait pas enregistrer.
-  if(['checkout.session.completed','invoice.paid','invoice.payment_failed','customer.subscription.deleted'].includes(event.type)){
-   console.error('WEBHOOK_STORAGE_NOT_CONFIGURED',event.type,event.id);
-   return res.status(503).send('Stockage des événements non configuré');
-  }
-  return res.status(200).json({received:true});
- }catch(e){return res.status(400).send('Signature webhook invalide');}
+  event=stripe.webhooks.constructEvent(await rawBody(req),req.headers['stripe-signature'],STRIPE_WEBHOOK_SECRET);
+ }catch(err){console.error('stripe_webhook_invalid',err?.type||err?.name);return res.status(400).json({error:'Signature webhook invalide'});}
+ // Idempotent by design: no local write or fulfillment. Events and invoice/subscription
+ // states remain available in Stripe and can be replayed to a future CRM integration.
+ const tracked=new Set(['checkout.session.completed','checkout.session.async_payment_succeeded','checkout.session.async_payment_failed','invoice.paid','invoice.payment_failed','customer.subscription.created','customer.subscription.updated','customer.subscription.deleted']);
+ if(tracked.has(event.type)){
+  const obj=event.data?.object||{};
+  console.info('stripe_event_verified',event.id,event.type,obj.id||'');
+ }
+ return res.status(200).json({received:true});
 }
