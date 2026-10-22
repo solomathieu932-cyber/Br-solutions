@@ -1,6 +1,6 @@
 // BR Solutions — notification premium des demandes de démonstration via Resend.
 // Aucune clé n'est exposée au navigateur. Configuration : RESEND_API_KEY dans Vercel.
-const TO = 'lixcroville@gmail.com';
+const TO = 'benoit.richard@tempeos.com';
 const FROM = 'BR Solutions <contact@brsolutionstempeos.com>';
 const pick = (value,max) => typeof value === 'string' ? value.trim().slice(0,max) : '';
 const reply = (res,status,error) => res.status(status).json({error});
